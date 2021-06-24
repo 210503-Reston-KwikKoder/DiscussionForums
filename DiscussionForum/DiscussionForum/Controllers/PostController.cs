@@ -3,8 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFBL;
-using DFModels;
+using DNHBL;
+using DNHModels;
 using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -13,11 +13,11 @@ namespace DNHREST.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ForumPostController : ControllerBase
+    public class PostController : ControllerBase
     {
-        private readonly IForumPost _BL;
+        private readonly IBussiness _BL;
 
-        public ForumPostController (IForumPost BL)
+        public PostController (IBussiness BL)
         {
             _BL = BL;
         }

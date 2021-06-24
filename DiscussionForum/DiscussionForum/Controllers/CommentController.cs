@@ -3,9 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DFDL;
-using DFBL;
-using DFModels;
+using DNHBL;
+using DNHModels;
 using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -16,13 +15,13 @@ namespace DNHREST.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IComment _BL;
+        private readonly IBussiness _BL;
 
-        public CommentController (IComment BL)
+        public CommentController (IBussiness BL)
         {
             _BL = BL;
         }
-        // GET: api/<CommentController>
+        // GET: api/<DogController>
         [HttpGet]
         public async Task<IActionResult> GetAllComments()
         {
@@ -36,7 +35,7 @@ namespace DNHREST.Controllers
             }
         }
 
-        // GET api/<CommentController>/5
+        // GET api/<DogController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetComment(int id)
         {
@@ -52,7 +51,7 @@ namespace DNHREST.Controllers
 
         }
 
-        // PUT api/<CommentController>
+        // PUT api/<DogController>
         [HttpPost]
         public async Task<IActionResult> AddComment(Comments comm)
         {
@@ -68,7 +67,7 @@ namespace DNHREST.Controllers
             }
         }
 
-        // POST api/<CommentController>
+        // POST api/<DogController>
         [HttpPut]
         public async Task<IActionResult> UpdateComment([FromBody] Comments comm)
         {
@@ -84,7 +83,7 @@ namespace DNHREST.Controllers
             }
         }
 
-        // DELETE api/<CommentController>/5
+        // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(Comments comm)
         {
