@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DNHBL;
-using DNHModels;
+using DFBL;
+using DFDL;
+using DFModels;
 using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,9 +16,9 @@ namespace DNHREST.Controllers
     [ApiController]
     public class ForumController : ControllerBase
     {
-        private readonly IBussiness _BL;
+        private readonly IForum _BL;
 
-        public ForumController (IBussiness BL)
+        public ForumController(IForum BL)
         {
             _BL = BL;
         }
@@ -28,7 +29,8 @@ namespace DNHREST.Controllers
             try
             {
                 return Ok(await _BL.GetAllForums());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.Error("Failed to retrieve all Forums in ForumController", e.Message);
                 return NotFound();

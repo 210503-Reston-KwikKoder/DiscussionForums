@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
 
 namespace DFBL
 {
-    class IForum
+    public interface IForum
     {
         Task<List<Forum>> GetAllForums();
         /// <summary>

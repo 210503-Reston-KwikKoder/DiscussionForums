@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
 
 namespace DFBL
 {
-    class IPost
+    public interface IForumPost
     {
         /// <summary>
         /// Returns all Posts in Database

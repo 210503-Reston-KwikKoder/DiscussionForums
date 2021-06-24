@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
+using DFDL;
 
 namespace DFBL
 {
-    class ForumBL
+    class ForumBL :IForum
     {
+        private readonly IRepo _repo;
+        public ForumBL(DFDBContext context)
+        {
+            _repo = new Repo(context);
+        }
         public async Task<List<Forum>> GetAllForums()
         {
             return await _repo.GetAllForumsAsync();

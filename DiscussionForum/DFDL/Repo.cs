@@ -3,12 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
 
 namespace DFDL
 {
-    class Repo
+    public class Repo : IRepo
     {
         //Done with Tags & starting with Forums
+        private readonly DFDBContext _context;
+        public Repo(DFDBContext context)
+        {
+            _context = context;
+            Log.Debug("Repo instantiated");
+        }
 
         public async Task<Forum> AddForumAsync(Forum forum)
         {

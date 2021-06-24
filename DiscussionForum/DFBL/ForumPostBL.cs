@@ -3,11 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
+using DFDL;
 
 namespace DFBL
 {
-    class PostBL
+   
+    class ForumPostBL :IForumPost
     {
+        private readonly IRepo _repo;
+        public ForumPostBL(DFDBContext context)
+        {
+            _repo = new Repo(context);
+        }
         public async Task<List<Posts>> GetAllPosts()
         {
             return await _repo.GetAllPostsAsync();

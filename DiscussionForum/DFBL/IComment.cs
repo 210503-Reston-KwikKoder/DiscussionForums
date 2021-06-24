@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
 
 namespace DFBL
 {
-    class IComment
+    public interface IComment
     {
         Task<List<Comments>> GetAllComments();
         /// <summary>

@@ -3,8 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using DNHBL;
-using DNHModels;
+using DFDL;
+using DFBL;
+using DFModels;
 using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -15,27 +16,28 @@ namespace DNHREST.Controllers
     [ApiController]
     public class CommentController : ControllerBase
     {
-        private readonly IBussiness _BL;
+        private readonly IComment _BL;
 
-        public CommentController (IBussiness BL)
+        public CommentController(IComment BL)
         {
             _BL = BL;
         }
-        // GET: api/<DogController>
+        // GET: api/<CommentController>
         [HttpGet]
         public async Task<IActionResult> GetAllComments()
         {
             try
             {
                 return Ok(await _BL.GetAllComments());
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 Log.Error("Failed to gather all comments In CommentController", e.Message);
                 return NotFound();
             }
         }
 
-        // GET api/<DogController>/5
+        // GET api/<CommentController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetComment(int id)
         {
@@ -51,13 +53,13 @@ namespace DNHREST.Controllers
 
         }
 
-        // PUT api/<DogController>
+        // PUT api/<CommentController>
         [HttpPost]
         public async Task<IActionResult> AddComment(Comments comm)
         {
             try
             {
-                
+
                 return Created("api/Comment", await _BL.AddComment(comm));
             }
             catch (Exception e)
@@ -67,7 +69,7 @@ namespace DNHREST.Controllers
             }
         }
 
-        // POST api/<DogController>
+        // POST api/<CommentController>
         [HttpPut]
         public async Task<IActionResult> UpdateComment([FromBody] Comments comm)
         {
@@ -83,7 +85,7 @@ namespace DNHREST.Controllers
             }
         }
 
-        // DELETE api/<DogController>/5
+        // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComment(Comments comm)
         {

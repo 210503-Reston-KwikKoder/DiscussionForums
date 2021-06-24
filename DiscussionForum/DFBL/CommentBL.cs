@@ -3,11 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DFModels;
+using DFDL;
 
 namespace DFBL
 {
-    class CommentBL
+    class CommentBL :IComment
     {
+        private readonly IRepo _repo;
+        public CommentBL(DFDBContext context)
+        {
+            _repo = new Repo(context);
+        }
         public async Task<List<Comments>> GetAllComments()
         {
             return await _repo.GetAllCommentsAsync();
