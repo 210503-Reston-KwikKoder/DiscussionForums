@@ -11,9 +11,9 @@ namespace DFBL
     public class ForumBL :IForum
     {
         private readonly IRepo _repo;
-        public ForumBL(DFDBContext context)
+        public ForumBL(IRepo repo)
         {
-            _repo = new Repo(context);
+            _repo = repo;
         }
         public async Task<List<Forum>> GetAllForums()
         {

@@ -12,9 +12,9 @@ namespace DFBL
     public class ForumPostBL :IForumPost
     {
         private readonly IRepo _repo;
-        public ForumPostBL(DFDBContext context)
+        public ForumPostBL(IRepo repo)
         {
-            _repo = new Repo(context);
+            _repo = repo;
         }
         public async Task<List<Posts>> GetAllPosts()
         {

@@ -4,97 +4,99 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DFBL;
+using DFDL;
 using DFModels;
 using Serilog;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
-namespace DNHREST.Controllers
+namespace DiscussionForumREST.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ForumPostController : ControllerBase
+    public class ForumController : ControllerBase
     {
-        private readonly IForumPost _BL;
+        private readonly IForum _BL;
 
-        public ForumPostController(IForumPost BL)
+        public ForumController(IForum BL)
         {
             _BL = BL;
         }
         // GET: api/<DogController>
         [HttpGet]
-        public async Task<IActionResult> GetPosts()
+        public async Task<IActionResult> GetForums()
         {
             try
             {
-                return Ok(await _BL.GetAllPosts());
+                return Ok(await _BL.GetAllForums());
             }
             catch (Exception e)
             {
-                Log.Error("Failed to Get all posts in PostController", e.Message);
+                Log.Error("Failed to retrieve all Forums in ForumController", e.Message);
                 return NotFound();
             }
         }
 
         // GET api/<DogController>/5
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetPost(int id)
+        public async Task<IActionResult> GetForum(int id)
         {
             try
             {
-                return Ok(await _BL.GetPostForForumWithID(id));
+                return Ok(await _BL.GetForum(id));
             }
             catch (Exception e)
             {
-                Log.Error("Failed to Get post with ID: " + id + " in PostController", e.Message);
+                Log.Error("Failed to retrieve all Forums with ID: " + id + " in ForumController", e.Message);
                 return NotFound();
             }
         }
 
         // PUT api/<DogController>
         [HttpPost]
-        public async Task<IActionResult> AddPost(Posts post)
+        public async Task<IActionResult> AddForum(Forum forum)
         {
             try
             {
-                return Created("api/Post", await _BL.AddPost(post));
+                await _BL.AddForum(forum);
+                return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to add post with ID: " + post.PostID + " in PostController", e.Message);
+                Log.Error("Failed to add Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
                 return BadRequest();
             }
         }
 
         // POST api/<DogController>
         [HttpPut]
-        public async Task<IActionResult> UpdatePost([FromBody] Posts post)
+        public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
         {
             try
             {
-                await _BL.UpdatePost(post);
+                await _BL.UpdateForum(forum);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to update post with ID: " + post.PostID + " in PostController", e.Message);
-                return BadRequest();
+                Log.Error("Failed to update Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
+                return BadRequest(e.Message);
             }
         }
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(Posts post)
+        public async Task<IActionResult> DeleteForum([FromBody] Forum forum)
         {
             try
             {
-                await _BL.RemovePost(post);
+                await _BL.RemoveForum(forum);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to Delete post with ID: " + post.PostID + " in PostController", e.Message);
-                return BadRequest();
+                Log.Error("Failed to remove Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
+                return BadRequest(e.Message);
             }
         }
     }

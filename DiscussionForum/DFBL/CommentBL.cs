@@ -11,9 +11,9 @@ namespace DFBL
     public class CommentBL :IComment
     {
         private readonly IRepo _repo;
-        public CommentBL(DFDBContext context)
+        public CommentBL(IRepo repo)
         {
-            _repo = new Repo(context);
+            _repo = repo;
         }
         public async Task<List<Comments>> GetAllComments()
         {
