@@ -8,7 +8,7 @@ using DFDL;
 
 namespace DFBL
 {
-    class ForumBL :IForum
+    public class ForumBL :IForum
     {
         private readonly IRepo _repo;
         public ForumBL(DFDBContext context)

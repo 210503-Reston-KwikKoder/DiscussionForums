@@ -8,7 +8,7 @@ using DFDL;
 
 namespace DFBL
 {
-    class CommentBL :IComment
+    public class CommentBL :IComment
     {
         private readonly IRepo _repo;
         public CommentBL(DFDBContext context)

@@ -34,6 +34,12 @@ namespace DFDL
                 .Property(post => post.PostID)
                 .ValueGeneratedOnAdd();
 
+            modelBuilder.Entity<Comments>()
+                .HasKey(comm => comm.CommentID);
+            modelBuilder.Entity<Forum>()
+                .HasKey(forum => forum.ForumID);
+            modelBuilder.Entity<Posts>()
+                .HasKey(post => post.PostID);
         }
     }
 }

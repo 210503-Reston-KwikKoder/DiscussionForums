@@ -9,7 +9,7 @@ using DFDL;
 namespace DFBL
 {
    
-    class ForumPostBL :IForumPost
+    public class ForumPostBL :IForumPost
     {
         private readonly IRepo _repo;
         public ForumPostBL(DFDBContext context)

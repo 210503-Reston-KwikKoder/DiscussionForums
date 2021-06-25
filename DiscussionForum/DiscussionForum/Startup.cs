@@ -11,6 +11,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DFBL;
+using DFDL;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscussionForum
 {
@@ -32,6 +35,12 @@ namespace DiscussionForum
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "DiscussionForum", Version = "v1" });
             });
+            services.AddDbContext<DFDBContext>(
+                options => options.UseSqlServer(Configuration.GetConnectionString("DiscussionForumDB"))
+                );
+            services.AddScoped<IComment, CommentBL>();
+            services.AddScoped<IForum, ForumBL>();
+            services.AddScoped<IForumPost, ForumPostBL>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
