@@ -21,7 +21,7 @@ namespace DFTests
         //Xunit creates new instances of test classes, you need to make sure that you seed your db for each class
         public UnitTest1()
         {
-            options = new DbContextOptionsBuilder<DFDBContext>().UseSqlServer("Filename=Test.db").Options;
+            options = new DbContextOptionsBuilder<DFDBContext>().UseSqlite("Filename=Test.db").Options;
             Seed();
         }
         [Fact]
@@ -687,6 +687,7 @@ namespace DFTests
                         }
 
                     );
+                    context.SaveChanges();
             }
         }
      }
