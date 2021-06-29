@@ -41,6 +41,7 @@ namespace DiscussionForum
             services.AddScoped<IComment, CommentBL>();
             services.AddScoped<IForum, ForumBL>();
             services.AddScoped<IForumPost, ForumPostBL>();
+            services.AddScoped<IRepo, Repo>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
