@@ -32,7 +32,7 @@ jobs:
     # Container build and push to Docker Hub
     - name: build and push image to Docker Hub
       run: |
-        docker build AppBL -t ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
+        docker build DiscussionForum -t ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
         docker push ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
     # Set the target Azure Kubernetes Service (AKS) cluster. 
     - name: Setup azure credentials
