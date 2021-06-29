@@ -166,7 +166,7 @@ namespace DFTests
                 };
 
                 //Act
-                var returnedValue = ForCont.DeleteForum(test);
+                var returnedValue = ForCont.DeleteForum(test.ForumID);
                 var returnedStatus = returnedValue.Result as NoContentResult;
 
                 //Assert
@@ -266,7 +266,7 @@ namespace DFTests
                 };
 
                 //Act
-                var returnedValue = PostCont.DeletePost(test);
+                var returnedValue = PostCont.DeletePost(test.PostID);
                 var returnedStatus = returnedValue.Result as NoContentResult;
 
                 //Assert
@@ -422,7 +422,7 @@ namespace DFTests
                 };
 
                 //Act
-                var returnedValue = CommentCont.DeleteComment(test);
+                var returnedValue = CommentCont.DeleteComment(test.CommentID);
                 var returnedStatus = returnedValue.Result as NoContentResult;
 
                 //Assert

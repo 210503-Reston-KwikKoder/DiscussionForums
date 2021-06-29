@@ -31,10 +31,10 @@ namespace DFBL
             return await _repo.AddPostsAsync(post);
         }
 
-        public async Task<Posts> RemovePost(Posts post)
+        public async Task<int> RemovePost(int postID)
         {
 
-            return await _repo.DeletePostsAsync(post);
+            return await _repo.DeletePostsAsync(postID);
             //throw new Exception("Looks like this post doesn't exist. We may have already processed this request.");
         }
 

@@ -29,7 +29,7 @@ namespace DFBL
         /// Removes a Post from the Database for the given Post 
         /// </summary>
         /// <returns></returns>
-        Task<Posts> RemovePost(Posts post);
+        Task<int> RemovePost(int postID);
         /// <summary>
         /// Updates the given Post Object in the Database
         /// </summary>

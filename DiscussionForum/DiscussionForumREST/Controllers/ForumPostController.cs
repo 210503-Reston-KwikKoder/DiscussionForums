@@ -84,16 +84,16 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeletePost(Posts post)
+        public async Task<IActionResult> DeletePost(int id)
         {
             try
             {
-                await _BL.RemovePost(post);
+                await _BL.RemovePost(id);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to Delete post with ID: " + post.PostID + " in PostController", e.Message);
+                Log.Error("Failed to Delete post with ID: " + id + " in PostController", e.Message);
                 return BadRequest();
             }
         }
