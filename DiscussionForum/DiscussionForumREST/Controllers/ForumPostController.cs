@@ -87,12 +87,8 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
-<<<<<<< HEAD
          [Authorize]
-        public async Task<IActionResult> DeletePost(Posts post)
-=======
         public async Task<IActionResult> DeletePost(int id)
->>>>>>> 85ddab9c33f0421982b6309ceba8c1bf14c7f819
         {
             try
             {

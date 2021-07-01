@@ -90,12 +90,9 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
-<<<<<<< HEAD
         [Authorize]
-        public async Task<IActionResult> DeleteComment(Comments comm)
-=======
         public async Task<IActionResult> DeleteComment(int id)
->>>>>>> 85ddab9c33f0421982b6309ceba8c1bf14c7f819
+
         {
             try
             {
