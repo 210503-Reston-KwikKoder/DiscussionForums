@@ -21,6 +21,7 @@ namespace DFModels
         }
 
         public int PostID { get; set; }
+        public string AuthID { get; set; }
         public string Topic { get; set; }
         public string UserCreator { get; set; }
         public int ForumID { get; set; }

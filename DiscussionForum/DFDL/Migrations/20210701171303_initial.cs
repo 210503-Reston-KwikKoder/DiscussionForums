@@ -14,6 +14,7 @@ namespace DFDL.Migrations
                     CommentID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PostID = table.Column<int>(type: "int", nullable: false),
+                    AuthID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Message = table.Column<string>(type: "nvarchar(max)", nullable: true)
@@ -43,6 +44,7 @@ namespace DFDL.Migrations
                 {
                     PostID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    AuthID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Topic = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     UserCreator = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ForumID = table.Column<int>(type: "int", nullable: false)
