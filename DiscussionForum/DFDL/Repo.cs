@@ -87,17 +87,15 @@ namespace DFDL
                 return null;
             }
         }
-        public async Task<int> DeletePostsAsync(int postID)
+        public async Task<int> DeletePostsAsync(Posts post)
         {
-            Posts toBeDeleted = _context.Posts.AsNoTracking().First(post => post.PostID == postID);
-            _context.Posts.Remove(toBeDeleted);
+            _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Posts from the database: {0}", postID);
-            return postID;
+            Log.Debug("Removing Posts from the database: {0}", post.PostID);
+            return post.PostID;
         }
         public async Task<Posts> UpdatePostsAsync(Posts posts)
         {
-            _context.Posts.Update(posts);
             await _context.SaveChangesAsync();
             Log.Debug("Updating Posts from the database: {0}", posts.PostID);
             return posts;
@@ -191,6 +189,11 @@ namespace DFDL
             if (found == null) return null;
             Log.Debug("Getting Comment from the database: {0}", comments.PostID);
             return new Comments(found.CommentID, found.PostID, found.UserName, found.Created, found.Message);
+        }
+
+        public async Task<Posts> GetPostByPostID(int id)
+        {
+            return await _context.Posts.FindAsync(id);
         }
     }
 }

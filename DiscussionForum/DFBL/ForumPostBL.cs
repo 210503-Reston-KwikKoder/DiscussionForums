@@ -26,15 +26,20 @@ namespace DFBL
             return await _repo.GetPostForForumWithID(id);
         }
 
+        public async Task<Posts> GetPostByPostID(int id)
+        {
+            return await _repo.GetPostByPostID(id);
+        }
+
         public async Task<Posts> AddPost(Posts post)
         {
             return await _repo.AddPostsAsync(post);
         }
 
-        public async Task<int> RemovePost(int postID)
+        public async Task<int> RemovePost(Posts post)
         {
 
-            return await _repo.DeletePostsAsync(postID);
+            return await _repo.DeletePostsAsync(post);
             //throw new Exception("Looks like this post doesn't exist. We may have already processed this request.");
         }
 

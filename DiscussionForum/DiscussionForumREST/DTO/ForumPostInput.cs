@@ -7,5 +7,9 @@ namespace DiscussionForumREST.DTO
 {
     public class ForumPostInput
     {
+        public int PostID { get; set; }
+        public string Topic { get; set; }
+        public string Description { get; set; }
+        public int ForumID { get; set; }
     }
 }

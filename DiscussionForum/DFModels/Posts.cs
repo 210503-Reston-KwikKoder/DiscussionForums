@@ -26,7 +26,7 @@ namespace DFModels
         public string UserName { get; set; }
         public string Description { get; set; }
         public int ForumID { get; set; }
-
+        public DateTime DateCreated { get; set; }
         public override string ToString()
         {
             return "PostID: " + this.PostID + " Topic: " + this.Topic + "  ForumID " + this.ForumID + " User: " + this.UserName;

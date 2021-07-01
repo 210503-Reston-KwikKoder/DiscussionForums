@@ -25,7 +25,6 @@ namespace DiscussionForumREST.Controllers
         }
         // GET: api/<DogController>
         [HttpGet]
-        [Authorize]
         public async Task<IActionResult> GetForums()
         {
             try
@@ -78,7 +77,7 @@ namespace DiscussionForumREST.Controllers
 
         // POST api/<DogController>
         [HttpPut]
-         [Authorize]
+         [Authorize("read:messages")]
         public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
         {
             try
@@ -95,7 +94,7 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
-        [Authorize]
+        [Authorize("read:messages")]
         public async Task<IActionResult> DeleteForum(int id)
         {
             try
