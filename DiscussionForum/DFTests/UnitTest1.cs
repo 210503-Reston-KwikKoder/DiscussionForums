@@ -10,7 +10,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Rest = DiscussionForumREST;
-
+using Moq;
+using DiscussionForumREST;
 
 namespace DFTests
 {
@@ -43,6 +44,32 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
                 Assert.IsType<List<Forum>>(returnedStatus.Value);
             }
+        }
+
+        [Fact]
+        public async void GetForumsExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IForum>();
+            mockBL.Setup(x => x.GetAllForums()).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumController(mockBL.Object);
+            var result = await controller.GetForums();
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
+        public async void GetForumExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IForum>();
+            mockBL.Setup(x => x.GetForum(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumController(mockBL.Object);
+            var result = await controller.GetForum(1);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -149,6 +176,19 @@ namespace DFTests
         }
 
         [Fact]
+        public async void UpdateForumExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IForum>();
+            mockBL.Setup(x => x.UpdateForum(It.IsAny<Forum>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumController(mockBL.Object);
+            var result = await controller.UpdateForum(new Forum());
+            Assert.IsType<BadRequestObjectResult>(result);
+        }
+
+        [Fact]
         public void RemoveForumsShouldReturnNoContent()
         {
             using (var context = new DFDBContext(options))
@@ -172,6 +212,19 @@ namespace DFTests
                 //Assert
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
+        }
+
+        [Fact]
+        public async void RemoveForumsExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IForum>();
+            mockBL.Setup(x => x.RemoveForum(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumController(mockBL.Object);
+            var result = await controller.DeleteForum(1);
+            Assert.IsType<BadRequestObjectResult>(result);
         }
 
         [Fact]
@@ -204,6 +257,19 @@ namespace DFTests
         }
 
         [Fact]
+        public async void AddPostExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IForumPost>();
+            mockBL.Setup(x => x.AddPost(It.IsAny<Posts>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumPostController(mockBL.Object);
+            var result = await controller.AddPost(new Posts());
+            Assert.IsType<BadRequestResult>(result);
+        }
+
+        [Fact]
         public void GetAllPostsShouldReturnAListOfResults()
         {
             using (var context = new DFDBContext(options))
@@ -222,6 +288,19 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
                 Assert.IsType<List<Posts>>(returnedStatus.Value);
             }
+        }
+
+        [Fact]
+        public async void GetAllPostsExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IForumPost>();
+            mockBL.Setup(x => x.GetAllPosts()).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumPostController(mockBL.Object);
+            var result = await controller.GetPosts();
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -245,6 +324,19 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
                 Assert.IsType<List<Posts>>(returnedStatus.Value);
             }
+        }
+
+        [Fact]
+        public async void GetPostsExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IForumPost>();
+            mockBL.Setup(x => x.GetPostForForumWithID(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumPostController(mockBL.Object);
+            var result = await controller.GetPost(1);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -273,6 +365,20 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
+
+        [Fact]
+        public async void DeletePostsExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IForumPost>();
+            mockBL.Setup(x => x.RemovePost(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumPostController(mockBL.Object);
+            var result = await controller.DeletePost(1);
+            Assert.IsType<BadRequestResult>(result);
+        }
+
         [Fact]
         public void UpdatePostsShouldReturnNoContent()
         {
@@ -299,6 +405,20 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
+
+        [Fact]
+        public async void UpdatePostsExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IForumPost>();
+            mockBL.Setup(x => x.UpdatePost(It.IsAny<Posts>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.ForumPostController(mockBL.Object);
+            var result = await controller.UpdatePost(new Posts());
+            Assert.IsType<BadRequestResult>(result);
+        }
+
         [Fact]
         public void AddCommentsShouldCreateAPostAndReturnCreated()
         {
@@ -380,6 +500,19 @@ namespace DFTests
         }
 
         [Fact]
+        public async void GetAllCommentsExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IComment>();
+            mockBL.Setup(x => x.GetAllComments()).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.CommentController(mockBL.Object);
+            var result = await controller.GetAllComments();
+            Assert.IsType<NotFoundResult>(result);
+        }
+
+        [Fact]
         public void GetCommentShouldReturnACommentOfResults()
         {
             using (var context = new DFDBContext(options))
@@ -400,6 +533,19 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
                 Assert.IsType<List<Comments>>(returnedStatus.Value);
             }
+        }
+
+        [Fact]
+        public async void GetCommentExceptionShouldReturnNotFound()
+        {
+            var mockBL = new Mock<IComment>();
+            mockBL.Setup(x => x.GetComment(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.CommentController(mockBL.Object);
+            var result = await controller.GetComment(1);
+            Assert.IsType<NotFoundResult>(result);
         }
 
         [Fact]
@@ -429,6 +575,20 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
+
+        [Fact]
+        public async void DeleteCommentExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IComment>();
+            mockBL.Setup(x => x.RemoveComments(It.IsAny<int>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.CommentController(mockBL.Object);
+            var result = await controller.DeleteComment(1);
+            Assert.IsType<BadRequestResult>(result);
+        }
+
         [Fact]
         public void UpdateCommentsShouldReturnNoContent()
         {
@@ -456,6 +616,20 @@ namespace DFTests
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
+
+        [Fact]
+        public async void UpdateCommentExceptionShouldReturnBadRequest()
+        {
+            var mockBL = new Mock<IComment>();
+            mockBL.Setup(x => x.UpdateComment(It.IsAny<Comments>())).Throws(new Exception("exception test"));
+
+
+
+            var controller = new Rest.Controllers.CommentController(mockBL.Object);
+            var result = await controller.UpdateComment(new Comments());
+            Assert.IsType<BadRequestResult>(result);
+        }
+
         [Fact]
         public void GetAllComments()
         {
@@ -633,6 +807,79 @@ namespace DFTests
                 Assert.NotEqual(ForumID, result.ForumID);
             }
         }
+
+        [Fact]
+        public async void GetForumAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Forum toFind = await _repo.AddForumAsync(new Forum(12, "test 1", "test"));
+
+                Forum found = await _repo.GetForumAsync(toFind);
+
+                Assert.Equal(toFind.ForumID, found.ForumID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void  GetPostsByIdAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+
+                Posts found = await _repo.GetPostsByIdAsync(1);
+
+                Assert.Equal(toFind.PostID, found.PostID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void GetPostsAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+
+                Posts found = await _repo.GetPostsAsync(toFind);
+
+                Assert.Equal(toFind.PostID, found.PostID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void GetCommentsAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Comments toFind = await _repo.AddCommentsAsync(new Comments(1, 1, "test", DateTime.Now, "test"));
+
+                Comments found = await _repo.GetCommentsAsync(toFind);
+
+                Assert.Equal(toFind.CommentID, found.CommentID);
+                Assert.Equal(toFind.PostID, found.PostID);
+                
+            }
+        }
+
+        [Fact]
+        public void CheckScopeAuthShouldWork()
+        {
+            HasScopeRequirement scope = new HasScopeRequirement("testScope", "testIssuer");
+            string expectedScope = "testScope";
+            string expectedIssue = "testIssuer";
+            Assert.Equal(scope.Scope, expectedScope);
+            Assert.Equal(scope.Issuer, expectedIssue);
+
+        }
+
         private void Seed()
         {
             using (var context = new DFDBContext(options))
