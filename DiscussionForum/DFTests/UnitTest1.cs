@@ -189,7 +189,7 @@ namespace DFTests
                     PostID = 1,
                     ForumID = 631,
                     Topic = "test",
-                    UserCreator = "Cesar_19"
+                    UserName = "Cesar_19"
                 };
 
                 //Act
@@ -261,7 +261,7 @@ namespace DFTests
                 {
                     PostID = 7771,
                     Topic = "Lost Dogs",
-                    UserCreator = "Cesar_19",
+                    UserName = "Cesar_19",
                     ForumID = 631
                 };
 
@@ -287,7 +287,7 @@ namespace DFTests
                 {
                     PostID = 1648,
                     Topic = "Found Dog",
-                    UserCreator = "Cesar_19",
+                    UserName = "Cesar_19",
                     ForumID = 631
                 };
 
@@ -675,14 +675,14 @@ namespace DFTests
                         {
                             PostID = 7771,
                             Topic = "Lost Dogs",
-                            UserCreator = "Cesar_19",
+                            UserName = "Cesar_19",
                             ForumID = 631
                         },
                         new Posts
                         {
                             PostID = 1648,
                             Topic = "Found Dogs",
-                            UserCreator = "Cesar_19",
+                            UserName = "Cesar_19",
                             ForumID = 631
                         }
 

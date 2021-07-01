@@ -46,7 +46,8 @@ namespace DFDL.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AuthID = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Topic = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    UserCreator = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ForumID = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>

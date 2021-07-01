@@ -140,7 +140,7 @@ namespace DFDL
                 return null;
             }
             Log.Debug("Getting Posts from the database: {0}", posts.PostID);
-            return new Posts(found.PostID, found.Topic, found.UserCreator, found.ForumID);
+            return new Posts(found.PostID, found.Topic, found.UserName, found.ForumID);
         }
 
         //Done with Posts & starting with Comments
