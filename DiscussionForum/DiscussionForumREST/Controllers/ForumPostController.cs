@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using DFBL;
 using DFModels;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,6 +54,7 @@ namespace DiscussionForumREST.Controllers
 
         // PUT api/<DogController>
         [HttpPost]
+         [Authorize]
         public async Task<IActionResult> AddPost(Posts post)
         {
             try
@@ -68,6 +70,7 @@ namespace DiscussionForumREST.Controllers
 
         // POST api/<DogController>
         [HttpPut]
+         [Authorize]
         public async Task<IActionResult> UpdatePost([FromBody] Posts post)
         {
             try
@@ -84,6 +87,7 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
+         [Authorize]
         public async Task<IActionResult> DeletePost(Posts post)
         {
             try
