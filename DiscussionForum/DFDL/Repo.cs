@@ -28,13 +28,13 @@ namespace DFDL
             Log.Debug("Adding Forums into the database: {0}", forum.ForumID);
             return forum;
         }
-        public async Task<Forum> DeleteForumAsync(Forum forum)
+        public async Task<int> DeleteForumAsync(int forumID)
         {
-            Forum toBeDeleted = _context.Forums.AsNoTracking().First(foru => foru.ForumID == forum.ForumID);
+            Forum toBeDeleted = _context.Forums.AsNoTracking().First(foru => foru.ForumID == forumID);
             _context.Forums.Remove(toBeDeleted);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Forums from the database: {0}", forum.ForumID);
-            return forum;
+            Log.Debug("Removing Forums from the database: {0}", forumID);
+            return forumID;
         }
         public async Task<Forum> UpdateForumAsync(Forum forum)
         {
@@ -87,13 +87,13 @@ namespace DFDL
                 return null;
             }
         }
-        public async Task<Posts> DeletePostsAsync(Posts posts)
+        public async Task<int> DeletePostsAsync(int postID)
         {
-            Posts toBeDeleted = _context.Posts.AsNoTracking().First(post => post.PostID == posts.PostID);
+            Posts toBeDeleted = _context.Posts.AsNoTracking().First(post => post.PostID == postID);
             _context.Posts.Remove(toBeDeleted);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Posts from the database: {0}", posts.PostID);
-            return posts;
+            Log.Debug("Removing Posts from the database: {0}", postID);
+            return postID;
         }
         public async Task<Posts> UpdatePostsAsync(Posts posts)
         {
@@ -154,13 +154,13 @@ namespace DFDL
             Log.Debug("Adding Comment into the database: {0}", comments.PostID);
             return comments;
         }
-        public async Task<Comments> DeleteCommentsAsync(Comments comments)
+        public async Task<int> DeleteCommentsAsync(int commentID)
         {
-            Comments toBeDeleted = _context.Comments.AsNoTracking().First(comm => comm.CommentID == comments.CommentID);
+            Comments toBeDeleted = _context.Comments.AsNoTracking().First(comm => comm.CommentID == commentID);
             _context.Comments.Remove(toBeDeleted);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Comment from the database: {0}", comments.CommentID);
-            return comments;
+            Log.Debug("Removing Comment from the database: {0}", commentID);
+            return commentID;
         }
         public async Task<Comments> UpdateCommentsAsync(Comments comments)
         {

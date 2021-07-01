@@ -87,16 +87,16 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteComment(Comments comm)
+        public async Task<IActionResult> DeleteComment(int id)
         {
             try
             {
-                await _BL.RemoveComments(comm);
+                await _BL.RemoveComments(id);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to Delete comments for ID: " + comm.CommentID + " In CommentController", e.Message);
+                Log.Error("Failed to Delete comments for ID: " + id + " In CommentController", e.Message);
                 return BadRequest();
             }
         }

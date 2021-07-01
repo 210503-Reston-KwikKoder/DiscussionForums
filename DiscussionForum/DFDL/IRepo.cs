@@ -11,14 +11,14 @@ namespace DFDL
     {
         //Forums
         Task<Forum> AddForumAsync(Forum forum);
-        Task<Forum> DeleteForumAsync(Forum forum);
+        Task<int> DeleteForumAsync(int forumID);
         Task<Forum> UpdateForumAsync(Forum forum);
         Task<Forum> GetForumByIdAsync(int id);
         Task<List<Forum>> GetAllForumsAsync();
         Task<Forum> GetForumAsync(Forum forum);
         //Posts
         Task<Posts> AddPostsAsync(Posts posts);
-        Task<Posts> DeletePostsAsync(Posts posts);
+        Task<int> DeletePostsAsync(int postID);
         Task<Posts> UpdatePostsAsync(Posts posts);
         Task<Posts> GetPostsByIdAsync(int id);
         Task<List<Posts>> GetPostForForumWithID(int id);
@@ -26,7 +26,7 @@ namespace DFDL
         Task<Posts> GetPostsAsync(Posts posts);
         //Comments
         Task<Comments> AddCommentsAsync(Comments comments);
-        Task<Comments> DeleteCommentsAsync(Comments comments);
+        Task<int> DeleteCommentsAsync(int commentID);
         Task<Comments> UpdateCommentsAsync(Comments comments);
         Task<List<Comments>> GetCommentsByIdAsync(int id);
         Task<List<Comments>> GetAllCommentsAsync();

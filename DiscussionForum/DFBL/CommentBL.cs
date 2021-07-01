@@ -30,10 +30,10 @@ namespace DFBL
             return await _repo.AddCommentsAsync(comment);
         }
 
-        public async Task<Comments> RemoveComments(Comments comments)
+        public async Task<int> RemoveComments(int commentID)
         {
 
-            return await _repo.DeleteCommentsAsync(comments);
+            return await _repo.DeleteCommentsAsync(commentID);
 
         }
 

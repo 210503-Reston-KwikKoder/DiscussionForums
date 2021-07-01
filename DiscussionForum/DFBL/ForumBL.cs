@@ -30,11 +30,11 @@ namespace DFBL
             return await _repo.AddForumAsync(forum);
         }
 
-        public async Task<Forum> RemoveForum(Forum forum)
+        public async Task<int> RemoveForum(int forumID)
         {
-            if (await _repo.GetForumAsync(forum) != null)
-                return await _repo.DeleteForumAsync(forum);
-            throw new Exception("This Forum does not exist. We may have already processed this request.");
+            
+            return await _repo.DeleteForumAsync(forumID);
+     
         }
 
         public async Task<Forum> UpdateForum(Forum forum)
