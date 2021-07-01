@@ -24,7 +24,7 @@ namespace DFBL
         /// Removes a Forum from the Database for the given Post 
         /// </summary>
         /// <returns></returns>
-        Task<Forum> RemoveForum(Forum forum);
+        Task<int> RemoveForum(int forumID);
         /// <summary>
         /// Updates the given Forum Object in the Database
         /// </summary>

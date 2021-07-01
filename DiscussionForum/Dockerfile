@@ -3,18 +3,18 @@ WORKDIR /app
 
 COPY *.sln .
 
-COPY DiscussionForum/*.csproj ./DiscussionForum/
+COPY DiscussionForumREST/*.csproj ./DiscussionForumREST/
 COPY DFBL/*.csproj ./DFBL/
 COPY DFDL/*.csproj ./DFDL/
 COPY DFModels/*.csproj ./DFModels/
 COPY DFTests/*.csproj ./DFTests/
 
-RUN cd DiscussionForum && dotnet restore
+RUN cd DiscussionForumREST && dotnet restore
 
 COPY . ./
 
 
-RUN dotnet publish DiscussionForum -c Release -o publish --no-restore
+RUN dotnet publish DiscussionForumREST -c Release -o publish --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS runtime
 WORKDIR /app 

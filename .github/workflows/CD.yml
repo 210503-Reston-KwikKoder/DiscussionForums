@@ -1,0 +1,63 @@
+name: CD
+
+# Only trigger when CI build succeeds
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+  workflow_dispatch:
+
+env:
+  CLUSTER_NAME: kwikkoder
+  CLUSTER_RESOURCE_GROUP: 210503-KwikKoder
+  NAMESPACE: kwikkoder
+  APP_NAME: discussion-api
+  IMAGE_TAG: ${{ github.sha }}
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    
+    # Connect to Docker Hub
+    - name: Login to Docker Hub
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+    
+    # Container build and push to Docker Hub
+    - name: build and push image to Docker Hub
+      run: |
+        docker build DiscussionForum -t ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
+        docker push ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
+    # Set the target Azure Kubernetes Service (AKS) cluster. 
+    - name: Setup azure credentials
+      uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}'
+        cluster-name: ${{ env.CLUSTER_NAME }}
+        resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+      id: login
+    
+    # Create namespace if doesn't exist
+    - name: create namespace
+      run: |
+        kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+    
+      
+    
+    # Deploy app to AKS
+    - name: Deploy to AKS
+      uses: azure/k8s-deploy@v1
+      with:
+        manifests: |
+          DiscussionForum/manifests/deploy-api.yml
+        images: |
+          ${{ secrets.DOCKERHUB_USERNAME}}/${{ env.APP_NAME }}:${{ github.sha }}
+        imagePullSecrets: |
+          - name: discussion-appsettings
+        namespace: ${{ env.NAMESPACE }}

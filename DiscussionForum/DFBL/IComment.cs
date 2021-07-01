@@ -26,7 +26,7 @@ namespace DFBL
         /// </summary>
         /// <param name="Username"></param>
         /// <returns></returns>
-        Task<Comments> RemoveComments(Comments comments);
+        Task<int> RemoveComments(int commentID);
         /// <summary>
         /// Updates the given Comment Object in the Database
         /// </summary>

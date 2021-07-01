@@ -95,17 +95,21 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
+<<<<<<< HEAD
         [Authorize]
         public async Task<IActionResult> DeleteForum([FromBody] Forum forum)
+=======
+        public async Task<IActionResult> DeleteForum(int id)
+>>>>>>> 85ddab9c33f0421982b6309ceba8c1bf14c7f819
         {
             try
             {
-                await _BL.RemoveForum(forum);
+                await _BL.RemoveForum(id);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to remove Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
+                Log.Error("Failed to remove Forums with ID: " + id + " in ForumController", e.Message);
                 return BadRequest(e.Message);
             }
         }

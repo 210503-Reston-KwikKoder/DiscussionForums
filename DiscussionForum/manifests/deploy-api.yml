@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discussion-api
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: discussion-api
+  template:
+    metadata:
+      labels:
+        app: discussion-api
+    spec:
+      containers:
+        - name: discussion-api
+          image: kwikkoder/discussion-api:${IMAGE_TAG}
+          # reference to my dockerhub repo image
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+          env:
+          - name: ASPNETCORE_ENVIRONMENT
+            value: "Development"
+          ports:
+            - containerPort: 80
+          volumeMounts:
+          - name: secrets
+            mountPath: /app/secrets
+            readOnly: true
+
+      volumes:
+      - name: secrets
+        secret:
+          secretName: discussion-appsettings
+# the container port is you defining the docker run -p portYou'reExposing:containerPort
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: discussion-api
+spec:
+  ports:
+    - targetPort: 80
+      port: 5001
+  # This is the port the service is exposing
+  selector:
+    app: discussion-api
