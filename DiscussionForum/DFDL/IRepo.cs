@@ -18,10 +18,11 @@ namespace DFDL
         Task<Forum> GetForumAsync(Forum forum);
         //Posts
         Task<Posts> AddPostsAsync(Posts posts);
-        Task<int> DeletePostsAsync(int postID);
+        Task<int> DeletePostsAsync(Posts post);
         Task<Posts> UpdatePostsAsync(Posts posts);
         Task<Posts> GetPostsByIdAsync(int id);
         Task<List<Posts>> GetPostForForumWithID(int id);
+        Task<Posts> GetPostByPostID(int id);
         Task<List<Posts>> GetAllPostsAsync();
         Task<Posts> GetPostsAsync(Posts posts);
         //Comments

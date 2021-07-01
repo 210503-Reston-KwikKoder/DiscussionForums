@@ -12,7 +12,7 @@ namespace DFModels
         {
             this.PostID = postID;
             this.Topic = topic;
-            this.UserCreator = userCreator;
+            this.UserName = userCreator;
             this.ForumID = forumID;
         }
         public Posts()
@@ -21,13 +21,15 @@ namespace DFModels
         }
 
         public int PostID { get; set; }
+        public string AuthID { get; set; }
         public string Topic { get; set; }
-        public string UserCreator { get; set; }
+        public string UserName { get; set; }
+        public string Description { get; set; }
         public int ForumID { get; set; }
-
+        public DateTime DateCreated { get; set; }
         public override string ToString()
         {
-            return "PostID: " + this.PostID + " Topic: " + this.Topic + "  ForumID " + this.ForumID + " User: " + this.UserCreator;
+            return "PostID: " + this.PostID + " Topic: " + this.Topic + "  ForumID " + this.ForumID + " User: " + this.UserName;
         }
     }
 }
