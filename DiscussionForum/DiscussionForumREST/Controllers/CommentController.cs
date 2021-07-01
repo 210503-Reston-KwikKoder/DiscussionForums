@@ -7,6 +7,7 @@ using DFDL;
 using DFBL;
 using DFModels;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -55,6 +56,7 @@ namespace DiscussionForumREST.Controllers
 
         // PUT api/<CommentController>
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> AddComment(Comments comm)
         {
             try
@@ -71,6 +73,7 @@ namespace DiscussionForumREST.Controllers
 
         // POST api/<CommentController>
         [HttpPut]
+        [Authorize]
         public async Task<IActionResult> UpdateComment([FromBody] Comments comm)
         {
             try
@@ -87,7 +90,9 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<CommentController>/5
         [HttpDelete("{id}")]
+        [Authorize]
         public async Task<IActionResult> DeleteComment(int id)
+
         {
             try
             {
