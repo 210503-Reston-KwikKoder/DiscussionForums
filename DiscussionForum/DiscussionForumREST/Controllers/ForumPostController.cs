@@ -23,6 +23,7 @@ namespace DiscussionForumREST.Controllers
     {
         private readonly IForumPost _BL;
         private readonly ApiSettings _ApiSettings;
+        private dynamic deResponse;
 
         public ForumPostController(IForumPost BL, IOptions<ApiSettings> settings)
         {
@@ -59,7 +60,7 @@ namespace DiscussionForumREST.Controllers
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
-                dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
 
                 // Get results from backend
                 List<Posts> found = await _BL.GetPostForForumWithID(id);
@@ -108,7 +109,7 @@ namespace DiscussionForumREST.Controllers
                 var request = new RestRequest(Method.POST);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
-                dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
 
                 // Creates a post object with given input
                 Posts post = new Posts()
@@ -149,13 +150,15 @@ namespace DiscussionForumREST.Controllers
                 var request = new RestRequest(Method.PUT);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
-                dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
 
+                // Tracks currently stored value and updates their values
                 Posts relatedPost = await _BL.GetPostByPostID(input.PostID);
                 relatedPost.UserName = deResponse.UserName;
                 relatedPost.Description = input.Description;
                 relatedPost.Topic = input.Topic;
 
+                // Returns to be updated
                 await _BL.UpdatePost(relatedPost);
                 return NoContent();
             }

@@ -13,6 +13,8 @@ using Rest = DiscussionForumREST;
 using Microsoft.Extensions.Options;
 using Moq;
 using DiscussionForumREST;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DFTests
 {
@@ -44,48 +46,6 @@ namespace DFTests
                 Assert.NotNull(returnedValue.Result);
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
                 Assert.IsType<List<Forum>>(returnedStatus.Value);
-            }
-        }
-        
-        [Fact]
-        public void GetCommentsShouldGetAllComments()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-    
-                //var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                //Act
-                List<Comments> returnedValue =  _BL.GetAllComments().Result;
-                int expected = 2;
-
-                //Assert
-                Assert.NotNull(returnedValue);
-                Assert.Equal(returnedValue.Count, expected);
-               
-            }
-        }
-
-        [Fact]
-        public void GetPostsShouldGetAllPosts()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-    
-                //var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                //Act
-                List<Posts> returnedValue =  _BL.GetAllPosts().Result;
-                int expected = 2;
-
-                //Assert
-                Assert.NotNull(returnedValue);
-                Assert.Equal(returnedValue.Count, expected);
-               
             }
         }
 
@@ -438,7 +398,21 @@ namespace DFTests
                 IForumPost _BL = new ForumPostBL(_repo);
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
 
+                var mockBL = new Mock<IForumPost>();
+                mockBL.Setup(x => x.UpdatePost(new Posts())).Returns(Task.FromResult(new Posts()));
+
+
                 var PostCont = new Rest.Controllers.ForumPostController(_BL, mockUserSettings.Object);
+
+/*                var HttpContextBaseMock = new Mock<HttpContext>();
+                HttpContextBaseMock.SetupGet(x => x.User.Identity.Name).Returns("user");
+                HttpContextBaseMock.SetupGet(x => x.User.Identity.IsAuthenticated).Returns(true);
+
+                var ActionContext = new Mock<ActionContext>(HttpContextBaseMock.Object);
+                ActionContext.SetupProperty(x => x.HttpContext, HttpContextBaseMock.Object);*/
+
+                //PostCont.ControllerContext = new ControllerContext(ActionContext.Object);
+
 
                 DTO.ForumPostInput test = new DTO.ForumPostInput()
                 {
@@ -453,6 +427,7 @@ namespace DFTests
                 var returnedStatus = returnedValue.Result as NoContentResult;
 
                 //Assert
+
                 //Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
@@ -467,6 +442,8 @@ namespace DFTests
 
 
             var controller = new Rest.Controllers.ForumPostController(mockBL.Object, mockUserSettings.Object);
+
+
             var result = await controller.UpdatePost(new DTO.ForumPostInput());
             Assert.IsType<BadRequestResult>(result);
         }
@@ -479,20 +456,16 @@ namespace DFTests
                 IRepo _repo = new Repo(context);
                 IComment _BL = new CommentBL(_repo);
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
-
                 var CommCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
-
                 Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
                     PostID = 123,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
-
                 //Act
                 var returnedValue = CommCont.AddComment(test);
                 var returnedStatus = returnedValue.Result as ObjectResult;
-
                 //Assert
                 Assert.NotNull(returnedValue.Result);
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status201Created);
@@ -514,7 +487,7 @@ namespace DFTests
 
                 Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
-                    PostID = 123,                   
+                    PostID = 123,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
@@ -537,15 +510,11 @@ namespace DFTests
             {
                 IRepo _repo = new Repo(context);
                 IComment _BL = new CommentBL(_repo);
-
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
-
                 var CommCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
-
                 //Act
                 var returnedValue = CommCont.GetAllComments();
                 var returnedStatus = returnedValue.Result as ObjectResult;
-
                 //Assert
                 Assert.NotNull(returnedValue.Result);
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
@@ -565,30 +534,25 @@ namespace DFTests
             Assert.IsType<NotFoundResult>(result);
         }
 
-       /* [Fact]
-        public void GetCommentShouldReturnACommentOfResults()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                int CommentID = 753;
-
-                var mockUserSettings = new Mock<IOptions<ApiSettings>>();
-
-                var CommCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
-
-                //Act
-                var returnedValue = CommCont.GetComment(CommentID);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Comments>>(returnedStatus.Value);
-            }
-        }*/
+        /* [Fact]
+         public void GetCommentShouldReturnACommentOfResults()
+         {
+             using (var context = new DFDBContext(options))
+             {
+                 IRepo _repo = new Repo(context);
+                 IComment _BL = new CommentBL(_repo);
+                 int CommentID = 753;
+                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
+                 var CommCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
+                 //Act
+                 var returnedValue = CommCont.GetComment(CommentID);
+                 var returnedStatus = returnedValue.Result as ObjectResult;
+                 //Assert
+                 Assert.NotNull(returnedValue.Result);
+                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
+                 Assert.IsType<List<Comments>>(returnedStatus.Value);
+             }
+         }*/
 
         [Fact]
         public async void GetCommentExceptionShouldReturnNotFound()
@@ -612,11 +576,8 @@ namespace DFTests
             {
                 IRepo _repo = new Repo(context);
                 IComment _BL = new CommentBL(_repo);
-
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
-
                 var CommCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
-
                 Comments test = new Comments
                 {
                     CommentID = 753,
@@ -625,11 +586,9 @@ namespace DFTests
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
-
                 //Act
                 var returnedValue = CommCont.DeleteComment(test.CommentID);
                 var returnedStatus = returnedValue.Result as NoContentResult;
-
                 //Assert
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
@@ -658,21 +617,17 @@ namespace DFTests
                 IRepo _repo = new Repo(context);
                 IComment _BL = new CommentBL(_repo);
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
-
                 var PostCont = new Rest.Controllers.CommentController(_BL, mockUserSettings.Object);
                 
-
                 Rest.DTO.UpdateCommentInput test = new Rest.DTO.UpdateCommentInput
                 {
                     PostID = 123,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
-
                 //Act
                 var returnedValue = PostCont.UpdateComment(test);
                 var returnedStatus = returnedValue.Result as NoContentResult;
-
                 //Assert
                 Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }

@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using DiscussionForumREST;
+using Microsoft.AspNetCore.HttpOverrides;
 
 namespace DiscussionForum
 {
@@ -98,6 +99,11 @@ namespace DiscussionForum
             services.AddScoped<IForum, ForumBL>();
             services.AddScoped<IForumPost, ForumPostBL>();
             services.AddScoped<IRepo, Repo>();
+            services.Configure<ForwardedHeadersOptions>(options =>
+            {
+                options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
