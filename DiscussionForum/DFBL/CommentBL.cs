@@ -17,7 +17,7 @@ namespace DFBL
         }
         public async Task<List<Comments>> GetAllComments()
         {
-            return await _repo.GetAllCommentsAsync();
+           return  await _repo.GetAllCommentsAsync();
         }
 
         public async Task<List<Comments>> GetComment(int commentID)
