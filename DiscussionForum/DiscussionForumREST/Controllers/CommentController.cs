@@ -93,8 +93,9 @@ namespace DiscussionForumREST.Controllers
                         CommentID = c.CommentID,
                         PostID = c.PostID,
                         AuthID = c.AuthID,
-                        Message = c.Message
-                    };
+                        Message = c.Message,
+                        isLoggedUser = (c.AuthID == UserID)
+                };
                     
                     if (deResponse.username == null)
                         temp.UserName = deResponse.name;
