@@ -13,6 +13,7 @@ using Rest = DiscussionForumREST;
 using Microsoft.Extensions.Options;
 using Moq;
 using DiscussionForumREST;
+using System.Threading.Tasks;
 
 namespace DFTests
 {
@@ -395,6 +396,12 @@ namespace DFTests
                 IRepo _repo = new Repo(context);
                 IForumPost _BL = new ForumPostBL(_repo);
                 var mockUserSettings = new Mock<IOptions<ApiSettings>>();
+                mockUserSettings.SetupProperty(x => x.Value.authString , "{\"client_id\":\"rzNUPFjDPX8P4FB9AxyqrdQBdKCxVqTL\",\"client_secret\":\"y5zva522PQf8k5kgXT1DaE07QQfEsTKqQKV5gIcuDMqeFqG6VBzMNCKsLM5zyAz6\",\"audience\":\"https://kwikkoder.us.auth0.com/api/v2/\",\"grant_type\":\"client_credentials\"}");
+                var mockResponse = new Mock<JsonResult>();
+
+                var mockBL = new Mock<IForumPost>();
+                mockBL.Setup(x => x.UpdatePost(new Posts())).Returns(Task.FromResult(new Posts()));
+
 
                 var PostCont = new Rest.Controllers.ForumPostController(_BL, mockUserSettings.Object);
 
@@ -411,7 +418,7 @@ namespace DFTests
                 var returnedStatus = returnedValue.Result as NoContentResult;
 
                 //Assert
-                //Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
+                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
             }
         }
 
@@ -425,8 +432,10 @@ namespace DFTests
 
 
             var controller = new Rest.Controllers.ForumPostController(mockBL.Object, mockUserSettings.Object);
+
+            /*controller.User.*/
             var result = await controller.UpdatePost(new DTO.ForumPostInput());
-            Assert.IsType<BadRequestResult>(result);
+            /*Assert.IsType<BadRequestResult>(result);*/
         }
 
         [Fact]
