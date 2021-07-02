@@ -439,13 +439,11 @@ namespace DFTests
 
                 var CommCont = new Rest.Controllers.CommentController(_BL);
 
-                Comments test = new Comments()
+                Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
-                    CommentID = 0,
-                    Created = DateTime.Now,
-                    Message = "Testing message",
-                    UserName = "Cesar_19",
-                    PostID = 1648
+                    PostID = 123,
+                    Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
+                    Message = "I just got a new dog!"
                 };
 
                 //Act
@@ -469,16 +467,15 @@ namespace DFTests
 
                 var CommCont = new Rest.Controllers.CommentController(_BL);
 
-                Comments test = new Comments
+                Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
-                    CommentID = 753,
-                    PostID = 123,
-                    UserName = "Cesar_19",
+                    PostID = 123,                   
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
 
                 //Act
+
                 var returnedValue = CommCont.AddComment(test);
                 var returnedStatus = returnedValue.Result as BadRequestResult;
 
@@ -609,13 +606,11 @@ namespace DFTests
 
                 var PostCont = new Rest.Controllers.CommentController(_BL);
 
-                Comments test = new Comments
+                Rest.DTO.UpdateCommentInput test = new Rest.DTO.UpdateCommentInput
                 {
-                    CommentID = 753,
                     PostID = 123,
-                    UserName = "Cesar_19",
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
-                    Message = "New Test Message!"
+                    Message = "I just got a new dog!"
                 };
 
                 //Act
@@ -636,7 +631,7 @@ namespace DFTests
 
 
             var controller = new Rest.Controllers.CommentController(mockBL.Object);
-            var result = await controller.UpdateComment(new Comments());
+            var result = await controller.UpdateComment(new Rest.DTO.UpdateCommentInput());
             Assert.IsType<BadRequestResult>(result);
         }
 
