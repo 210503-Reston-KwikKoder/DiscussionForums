@@ -46,6 +46,48 @@ namespace DFTests
                 Assert.IsType<List<Forum>>(returnedStatus.Value);
             }
         }
+        
+        [Fact]
+        public void GetCommentsShouldGetAllComments()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                IComment _BL = new CommentBL(_repo);
+    
+                //var ForCont = new Rest.Controllers.ForumController(_BL);
+
+                //Act
+                List<Comments> returnedValue =  _BL.GetAllComments().Result;
+                int expected = 2;
+
+                //Assert
+                Assert.NotNull(returnedValue);
+                Assert.Equal(returnedValue.Count, expected);
+               
+            }
+        }
+
+        [Fact]
+        public void GetPostsShouldGetAllPosts()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                IForumPost _BL = new ForumPostBL(_repo);
+    
+                //var ForCont = new Rest.Controllers.ForumController(_BL);
+
+                //Act
+                List<Posts> returnedValue =  _BL.GetAllPosts().Result;
+                int expected = 2;
+
+                //Assert
+                Assert.NotNull(returnedValue);
+                Assert.Equal(returnedValue.Count, expected);
+               
+            }
+        }
 
         [Fact]
         public async void GetForumsExceptionShouldReturnNotFound()
