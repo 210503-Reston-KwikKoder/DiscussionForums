@@ -12,6 +12,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using RestSharp;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Options;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,9 +25,10 @@ namespace DiscussionForumREST.Controllers
         private readonly IComment _BL;
         private readonly ApiSettings _ApiSettings;
 
-        public CommentController(IComment BL)
+        public CommentController(IComment BL, IOptions<ApiSettings> settings)
         {
             _BL = BL;
+            _ApiSettings = settings.Value;
         }
         // GET: api/<CommentController>
         [HttpGet]
