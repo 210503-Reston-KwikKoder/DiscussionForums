@@ -269,6 +269,67 @@ namespace DFTests
         }
 
         [Fact]
+        public async void GetForumShouldReturnNullIfFourmDosentExist()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+
+                Forum forum = await _repo.GetForumAsync(new Forum { ForumID = 55, Description = "TEST DESCRIPTION", Topic = "NOT EXISTING TOPIC" });
+
+                Assert.Null(forum);
+
+            }
+        }
+
+        [Fact]
+        public async void DeletePostShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts post = new Posts { PostID = 8844, Description = "" };
+                Posts added = await _repo.AddPostsAsync(post);
+
+                int id = await _repo.DeletePostsAsync(added);
+
+                Assert.Equal(id, added.PostID);
+
+            }
+        }
+
+        [Fact]
+        public async void GetPostsShouldReturnNullIfPostDosentExist()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts post = new Posts { PostID = 3211, Description = "" };
+                Posts Found = await _repo.GetPostsAsync(post);
+
+                Assert.Null(Found);
+
+            }
+        }
+
+        [Fact]
+        public async void DeleteCommentsShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                int expected = 753;
+
+                int id = await _repo.DeleteCommentsAsync(753);
+
+                Assert.Equal(id, expected);
+
+            }
+        }
+
+
+
+        [Fact]
         public void CheckScopeAuthShouldWork()
         {
             HasScopeRequirement scope = new HasScopeRequirement("testScope", "testIssuer");
@@ -278,6 +339,8 @@ namespace DFTests
             Assert.Equal(scope.Issuer, expectedIssue);
 
         }
+
+        
 
         private void Seed()
         {
