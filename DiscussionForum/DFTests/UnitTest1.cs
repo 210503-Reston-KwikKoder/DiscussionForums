@@ -340,7 +340,149 @@ namespace DFTests
 
         }
 
-        
+        [Fact]
+        public void ApiSettingsShouldWork()
+        {
+            ApiSettings apiSetting = new ApiSettings();
+            string gitHub = "test github";
+            string auth = "test auth";
+
+            apiSetting.githubApiKey = "test github";
+            apiSetting.authString = "test auth";
+
+            Assert.Equal(apiSetting.githubApiKey, gitHub);
+            Assert.Equal(apiSetting.authString, auth);
+
+        }
+
+        [Fact]
+        public void ForumPostOutputShouldWork()
+        {
+            ForumPostOutput forumPost = new ForumPostOutput();
+
+            string UserName = "test userName";
+            string Topic = "test Topic";
+            int PostID = 12;
+            bool isUser = true;
+            string ImgURL = "test of img";
+            int ForumID = 2;
+            string Description = "test description";
+            DateTime DateCreated = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+
+            forumPost.UserName = "test userName";
+            forumPost.Topic = "test Topic";
+            forumPost.PostID = 12;
+            forumPost.isUser = true;
+            forumPost.ImgURL = "test of img";
+            forumPost.ForumID = 2;
+            forumPost.Description = "test description";
+            forumPost.DateCreated = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+
+            Assert.Equal(forumPost.UserName, UserName);
+            Assert.Equal(forumPost.Topic, Topic);
+            Assert.Equal(forumPost.PostID, PostID);
+            Assert.Equal(forumPost.isUser, isUser);
+            Assert.Equal(forumPost.ImgURL, ImgURL);
+            Assert.Equal(forumPost.ForumID, ForumID);
+            Assert.Equal(forumPost.Description, Description);
+            Assert.Equal(forumPost.DateCreated, DateCreated);
+        }
+
+        [Fact]
+        public void ForumPostInputShouldWork()
+        {
+            ForumPostInput forumPost = new ForumPostInput();
+
+            string Topic = "test Topic";
+            int PostID = 12;
+            int ForumID = 2;
+            string Description = "test description";
+
+            forumPost.Topic = "test Topic";
+            forumPost.PostID = 12;
+            forumPost.ForumID = 2;
+            forumPost.Description = "test description";
+
+            Assert.Equal(forumPost.Topic, Topic);
+            Assert.Equal(forumPost.PostID, PostID);
+            Assert.Equal(forumPost.ForumID, ForumID);
+            Assert.Equal(forumPost.Description, Description);
+        }
+
+        [Fact]
+        public void CommentOutputShouldWork()
+        {
+            CommentOutput comment = new CommentOutput();
+
+            string AuthID = "test Auth";
+            int CommentID = 33;
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            bool isLoggedUser = true;
+            string Message = "test message";
+            string UserName = "test user name";
+
+
+            comment.AuthID = "test Auth";
+            comment.CommentID = 33;
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.isLoggedUser = true;
+            comment.Message = "test message";
+            comment.UserName = "test user name";
+
+
+            Assert.Equal(comment.AuthID, AuthID);
+            Assert.Equal(comment.CommentID, CommentID);
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.isLoggedUser, isLoggedUser);
+            Assert.Equal(comment.Message, Message);
+            Assert.Equal(comment.UserName, UserName);
+        }
+
+        [Fact]
+        public void UpdateCommentInputShouldWork()
+        {
+            UpdateCommentInput comment = new UpdateCommentInput();
+
+            int CommentID = 33;
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            string Message = "test message";
+
+
+            
+            comment.CommentID = 33;
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.Message = "test message";
+
+
+
+            Assert.Equal(comment.CommentID, CommentID);
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.Message, Message);
+        }
+
+        [Fact]
+        public void AddCommentinputShouldWork()
+        {
+            AddCommnetInput comment = new AddCommnetInput();
+
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            string Message = "test message";
+  
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.Message = "test message";
+
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.Message, Message);
+        }
 
         private void Seed()
         {
