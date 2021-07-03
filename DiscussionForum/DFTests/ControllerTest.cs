@@ -628,14 +628,35 @@ namespace DFTests
         {
             using (var context = new DFDBContext(options))
             {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
+
+                var _BL = new Mock<IComment>();
+                _BL.Setup(x => x.GetComment(It.IsAny<int>())).ReturnsAsync(
+                        new List<Comments>
+                        {
+                            new Comments
+                            {
+                                CommentID = 753,
+                                PostID = 123,
+                                UserName = "Cesar_19",
+                                Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
+                                Message = "I just got a new dog!"
+                            },
+                            new Comments
+                            {
+                                CommentID = 867,
+                                PostID = 5309,
+                                UserName = "Pepe_Rios",
+                                Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc),
+                                Message = "I just lost my dog!"
+                            }
+                        }
+                    );
 
                 int CommentID = 753;
 
                 var settings = Options.Create(new ApiSettings());
 
-                var CommCont = new Rest.Controllers.CommentController(_BL, settings);
+                var CommCont = new Rest.Controllers.CommentController(_BL.Object, settings);
 
                 var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[]
                 {
