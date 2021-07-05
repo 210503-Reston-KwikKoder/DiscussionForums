@@ -26,6 +26,7 @@ namespace DFModels
         public string UserName { get; set; }
         public string Description { get; set; }
         public int ForumID { get; set; }
+        public Forum forum { get; set; }
         public DateTime DateCreated { get; set; }
         public override string ToString()
         {
