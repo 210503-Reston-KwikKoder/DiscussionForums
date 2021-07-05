@@ -67,6 +67,7 @@ namespace DiscussionForumREST.Controllers
 
         // GET api/<CommentController>/5
         [HttpGet("{id}")]
+        [Authorize]
         public async Task<IActionResult> GetComment(int id)
         {
             try
@@ -101,7 +102,6 @@ namespace DiscussionForumREST.Controllers
                         temp.UserName = deResponse.name;
                     else
                         temp.UserName = deResponse.username;
-                    temp.isLoggedUser = (temp.UserName == UserID);
                     translated.Add(temp);
 
                 }

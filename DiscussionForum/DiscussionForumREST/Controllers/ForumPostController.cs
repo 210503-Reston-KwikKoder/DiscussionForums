@@ -106,7 +106,7 @@ namespace DiscussionForumREST.Controllers
                 string UserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 dynamic AppBearerToken = GetApplicationToken();
                 var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
-                var request = new RestRequest(Method.POST);
+                var request = new RestRequest(Method.GET);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
                 this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
@@ -131,6 +131,7 @@ namespace DiscussionForumREST.Controllers
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 Log.Error("Failed to add post with ForumID: " + input.ForumID + " in PostController", e.Message);
                 return BadRequest();
             }
