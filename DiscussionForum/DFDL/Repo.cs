@@ -153,13 +153,12 @@ namespace DFDL
             Log.Debug("Adding Comment into the database: {0}", comments.PostID);
             return comments;
         }
-        public async Task<int> DeleteCommentsAsync(int commentID)
+        public async Task<int> DeleteCommentsAsync(Comments comment)
         {
-            Comments toBeDeleted = _context.Comments.AsNoTracking().First(comm => comm.CommentID == commentID);
-            _context.Comments.Remove(toBeDeleted);
+            _context.Remove(comment);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Comment from the database: {0}", commentID);
-            return commentID;
+            Log.Debug("Removing Comment from the database: {0}", comment.CommentID);
+            return comment.CommentID;
         }
         public async Task<Comments> UpdateCommentsAsync(Comments comments)
         {
@@ -170,10 +169,16 @@ namespace DFDL
         }
         public async Task<List<Comments>> GetCommentsByIdAsync(int id)
         {
-            Log.Debug("Getting Comment from the database by ID: {0}", id);
+            Log.Debug("Getting Comment from the database by Post ID: {0}", id);
             return await _context.Comments.Select(comm => comm)
                 .Where(comm => comm.PostID == id)
                 .ToListAsync();
+        }
+        public async Task<Comments> GetCommentByCommentID(int commentID)
+        {
+            Log.Debug("Getting Comment from the database by ID: {0}", commentID);
+            return await _context.Comments.FirstAsync(comm => comm.CommentID == commentID);
+                
         }
         public async Task<List<Comments>> GetAllCommentsAsync()
         {

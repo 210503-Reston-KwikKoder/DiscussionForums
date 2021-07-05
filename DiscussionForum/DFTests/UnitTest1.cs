@@ -320,7 +320,10 @@ namespace DFTests
                 IRepo _repo = new Repo(context);
                 int expected = 753;
 
-                int id = await _repo.DeleteCommentsAsync(753);
+                int id = await _repo.DeleteCommentsAsync(new Comments()
+                {
+                    CommentID = expected
+                });
 
                 Assert.Equal(id, expected);
 

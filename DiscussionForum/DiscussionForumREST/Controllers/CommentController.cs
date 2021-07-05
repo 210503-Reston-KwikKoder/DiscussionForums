@@ -82,7 +82,7 @@ namespace DiscussionForumREST.Controllers
                 dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
 
                 // Get results from backend
-                List<Comments> found = await _BL.GetComment(id);
+                List<Comments> found = await _BL.GetCommentsByPostID(id);
 
                 // Translate Posts into expected output with isUser representing if the Post belongs to the user
                 List<DTO.CommentOutput> translated = new List<DTO.CommentOutput>();
@@ -194,12 +194,9 @@ namespace DiscussionForumREST.Controllers
             try
             {
                 string UserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                List<Comments> toDelete = await _BL.GetComment(id);                
-                foreach(Comments c in toDelete)
-                {
-                    if (c.AuthID == UserID)
-                        await _BL.RemoveComments(c.CommentID);
-                }            
+                Comments toDelete = await _BL.GetCommentByID(id);                
+                    if (toDelete.AuthID == UserID)
+                        await _BL.RemoveComments(toDelete);        
                 return NoContent();
             }
             catch (Exception e)

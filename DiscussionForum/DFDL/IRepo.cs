@@ -27,9 +27,10 @@ namespace DFDL
         Task<Posts> GetPostsAsync(Posts posts);
         //Comments
         Task<Comments> AddCommentsAsync(Comments comments);
-        Task<int> DeleteCommentsAsync(int commentID);
+        Task<int> DeleteCommentsAsync(Comments comment);
         Task<Comments> UpdateCommentsAsync(Comments comments);
-        Task<List<Comments>> GetCommentsByIdAsync(int id);
+        Task<List<Comments>> GetCommentsByIdAsync(int Postid);
+        Task<Comments> GetCommentByCommentID(int CommentID);
         Task<List<Comments>> GetAllCommentsAsync();
         Task<Comments> GetCommentsAsync(Comments comments);
     }
