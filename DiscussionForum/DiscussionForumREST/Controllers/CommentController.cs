@@ -91,6 +91,7 @@ namespace DiscussionForumREST.Controllers
                     {
                         Created = c.Created,
                         CommentID = c.CommentID,
+                        isLoggedUser = (c.AuthID == UserID),
                         PostID = c.PostID,
                         AuthID = c.AuthID,
                         Message = c.Message
