@@ -83,6 +83,7 @@ namespace DFDL
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 Log.Error("Failed to Add Post: " + posts + "\n" + e.Message);
                 return null;
             }
