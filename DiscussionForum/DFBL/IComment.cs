@@ -14,7 +14,8 @@ namespace DFBL
         /// Returns a Comment Object with the given commentID
         /// </summary>
         /// <returns></returns>
-        Task<List<Comments>> GetComment(int commentID);
+        Task<List<Comments>> GetCommentsByPostID(int PostID);
+        Task<Comments> GetCommentByID(int CommentID);
         /// <summary>
         /// Creates a Comment in the Database, based off of the Comment object passed
         /// </summary>
@@ -26,7 +27,7 @@ namespace DFBL
         /// </summary>
         /// <param name="Username"></param>
         /// <returns></returns>
-        Task<int> RemoveComments(int commentID);
+        Task<int> RemoveComments(Comments comment);
         /// <summary>
         /// Updates the given Comment Object in the Database
         /// </summary>

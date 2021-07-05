@@ -12,6 +12,7 @@ using System.Security.Claims;
 using RestSharp;
 using Newtonsoft.Json;
 using Microsoft.Extensions.Options;
+using Auth0.ManagementApi;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -23,7 +24,6 @@ namespace DiscussionForumREST.Controllers
     {
         private readonly IForumPost _BL;
         private readonly ApiSettings _ApiSettings;
-        private dynamic deResponse;
 
         public ForumPostController(IForumPost BL, IOptions<ApiSettings> settings)
         {
@@ -55,12 +55,9 @@ namespace DiscussionForumREST.Controllers
             {
                 // Gathers the Token from request header bearer and calls Auth0 API to gather info
                 string UserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
-                dynamic AppBearerToken = GetApplicationToken();
-                var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
-                IRestResponse restResponse = await client.ExecuteAsync(request);
-                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                dynamic AppBearerToken;
+                IRestResponse restResponse;
+                dynamic deResponse;
 
                 // Get results from backend
                 List<Posts> found = await _BL.GetPostForForumWithID(id);
@@ -69,20 +66,31 @@ namespace DiscussionForumREST.Controllers
                 List<DTO.ForumPostOutput> translated = new List<DTO.ForumPostOutput>();
                 foreach(Posts post in found)
                 {
+                    string PostUserID = post.AuthID;
+                    AppBearerToken = GetApplicationToken();
+                    /*ManagementApiClient Authclient = new ManagementApiClient(AppBearerToken.access_token, new Uri("https://kwikkoder.us.auth0.com/api/v2/"));*/
+                    var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{PostUserID}");
+                    var request = new RestRequest(Method.GET);
+                    request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
+                    restResponse = await client.ExecuteAsync(request);
+                    /*var Response = Authclient.Users.GetAsync(PostUserID).Result;*/
+                    deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+
                     DTO.ForumPostOutput temp = new DTO.ForumPostOutput()
                     {
                         DateCreated = post.DateCreated,
                         Description = post.Description,
                         ForumID = id,
                         PostID = post.PostID,
+                        UserName = deResponse.name,
                         ImgURL = deResponse.picture,
                         Topic = post.Topic,
                         isUser = (UserID == post.AuthID)
                     };
-                    if (deResponse.username == null)
-                        temp.UserName = deResponse.name;
+/*                    if (deResponse.username == null)
+                        temp.UserName = this.deResponse.name;
                     else
-                        temp.UserName = deResponse.username;
+                        temp.UserName = this.deResponse.username;*/
                     translated.Add(temp);
                 }
                 // Return the translation
@@ -91,7 +99,7 @@ namespace DiscussionForumREST.Controllers
             catch (Exception e)
             {
                 Log.Error("Failed to Get post with ID: " + id + " in PostController", e.Message);
-                return NotFound();
+                return BadRequest(e.Message);
             }
         }
 
@@ -109,7 +117,7 @@ namespace DiscussionForumREST.Controllers
                 var request = new RestRequest(Method.GET);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
-                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
 
                 // Creates a post object with given input
                 Posts post = new Posts()
@@ -148,10 +156,10 @@ namespace DiscussionForumREST.Controllers
                 string UserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 dynamic AppBearerToken = GetApplicationToken();
                 var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
-                var request = new RestRequest(Method.PUT);
+                var request = new RestRequest(Method.POST);
                 request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                 IRestResponse restResponse = await client.ExecuteAsync(request);
-                this.deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                dynamic deResponse  = JsonConvert.DeserializeObject(restResponse.Content);
 
                 // Tracks currently stored value and updates their values
                 Posts relatedPost = await _BL.GetPostByPostID(input.PostID);
