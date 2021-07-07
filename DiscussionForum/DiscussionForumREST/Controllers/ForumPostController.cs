@@ -76,12 +76,6 @@ namespace DiscussionForumREST.Controllers
                     deResponse = JsonConvert.DeserializeObject(restResponse.Content);
                     Console.WriteLine(deResponse.ToString());
 
-                    /*dynamic AppBearerToken = GetApplicationToken();
-                    var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
-                    var request = new RestRequest(Method.GET);
-                    request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
-                    IRestResponse restResponse = await client.ExecuteAsync(request);
-                    dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);*/
 
                     DTO.ForumPostOutput temp = new DTO.ForumPostOutput()
                     {
@@ -89,15 +83,14 @@ namespace DiscussionForumREST.Controllers
                         Description = post.Description,
                         ForumID = id,
                         PostID = post.PostID,
-                        UserName = deResponse.name,
                         ImgURL = deResponse.picture,
                         Topic = post.Topic,
                         isUser = (UserID == post.AuthID)
                     };
-/*                    if (deResponse.username == null)
-                        temp.UserName = this.deResponse.name;
+                    if (deResponse.username == null)
+                        temp.UserName = deResponse.name;
                     else
-                        temp.UserName = this.deResponse.username;*/
+                        temp.UserName = deResponse.username;
                     translated.Add(temp);
                 }
                 IEnumerable<Posts> testing = (from post in found where post.AuthID == UserID select post).ToList();
