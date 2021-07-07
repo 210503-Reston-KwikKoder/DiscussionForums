@@ -67,14 +67,21 @@ namespace DiscussionForumREST.Controllers
                 foreach(Posts post in found)
                 {
                     string PostUserID = post.AuthID;
+                    Console.WriteLine(PostUserID);
                     AppBearerToken = GetApplicationToken();
-                    /*ManagementApiClient Authclient = new ManagementApiClient(AppBearerToken.access_token, new Uri("https://kwikkoder.us.auth0.com/api/v2/"));*/
                     var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{PostUserID}");
                     var request = new RestRequest(Method.GET);
                     request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
                     restResponse = await client.ExecuteAsync(request);
-                    /*var Response = Authclient.Users.GetAsync(PostUserID).Result;*/
                     deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                    Console.WriteLine(deResponse.ToString());
+
+                    /*dynamic AppBearerToken = GetApplicationToken();
+                    var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
+                    var request = new RestRequest(Method.GET);
+                    request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
+                    IRestResponse restResponse = await client.ExecuteAsync(request);
+                    dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);*/
 
                     DTO.ForumPostOutput temp = new DTO.ForumPostOutput()
                     {
@@ -93,6 +100,10 @@ namespace DiscussionForumREST.Controllers
                         temp.UserName = this.deResponse.username;*/
                     translated.Add(temp);
                 }
+                IEnumerable<Posts> testing = (from post in found where post.AuthID == UserID select post).ToList();
+                testing = testing.Select(test => test)
+                    .Where(test => test.AuthID == UserID)
+                    .ToList();
                 // Return the translation
                 return Ok(translated);
             }
@@ -204,6 +215,7 @@ namespace DiscussionForumREST.Controllers
             var request = new RestRequest(Method.POST);
             request.AddHeader("content-type", "application/json");
             request.AddParameter("application/json", _ApiSettings.authString, ParameterType.RequestBody);
+            Console.WriteLine(_ApiSettings.authString);
             IRestResponse response = client.Execute(request);
             Log.Information("Response: {0}", response.Content);
             return JsonConvert.DeserializeObject(response.Content);
