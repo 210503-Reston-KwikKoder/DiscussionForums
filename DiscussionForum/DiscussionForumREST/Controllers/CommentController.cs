@@ -75,11 +75,9 @@ namespace DiscussionForumREST.Controllers
                 // Gathers the Token from request header bearer and calls Auth0 API to gather info
                 string UserID = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
                 dynamic AppBearerToken = GetApplicationToken();
-                var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{UserID}");
-                var request = new RestRequest(Method.POST);
-                request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
-                IRestResponse restResponse = await client.ExecuteAsync(request);
-                dynamic deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                string CommentUserID;
+                IRestResponse restResponse;
+                dynamic deResponse;
 
                 // Get results from backend
                 List<Comments> found = await _BL.GetCommentsByPostID(id);
@@ -88,6 +86,15 @@ namespace DiscussionForumREST.Controllers
                 List<DTO.CommentOutput> translated = new List<DTO.CommentOutput>();
                 foreach (Comments c in found)
                 {
+                    CommentUserID = c.AuthID;
+                    AppBearerToken = GetApplicationToken();
+                    var client = new RestClient($"https://kwikkoder.us.auth0.com/api/v2/users/{CommentUserID}");
+                    var request = new RestRequest(Method.GET);
+                    request.AddHeader("authorization", "Bearer " + AppBearerToken.access_token);
+                    restResponse = await client.ExecuteAsync(request);
+                    deResponse = JsonConvert.DeserializeObject(restResponse.Content);
+                    Console.WriteLine(deResponse.ToString());
+
                     DTO.CommentOutput temp = new DTO.CommentOutput()
                     {
                         Created = c.Created,
