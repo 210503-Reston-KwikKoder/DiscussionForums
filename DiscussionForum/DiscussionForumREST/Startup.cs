@@ -56,7 +56,7 @@ namespace DiscussionForum
 
         services.AddAuthorization(options =>
     {
-        options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
+        options.AddPolicy("read:Account", policy => policy.Requirements.Add(new HasScopeRequirement("read:Account", domain)));
     });
 
     services.AddCors(c =>  
@@ -98,10 +98,12 @@ namespace DiscussionForum
             services.AddDbContext<DFDBContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DiscussionForumDB"))
                 );
+            services.Configure<ApiSettings>(Configuration.GetSection("ApiSettings"));
             services.AddScoped<IComment, CommentBL>();
             services.AddScoped<IForum, ForumBL>();
             services.AddScoped<IForumPost, ForumPostBL>();
             services.AddScoped<IRepo, Repo>();
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
             services.Configure<ForwardedHeadersOptions>(options =>
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedProto;
