@@ -630,7 +630,7 @@ namespace DFTests
             {
 
                 var _BL = new Mock<IComment>();
-                _BL.Setup(x => x.GetComment(It.IsAny<int>())).ReturnsAsync(
+                _BL.Setup(x => x.GetCommentsByPostID(It.IsAny<int>())).ReturnsAsync(
                         new List<Comments>
                         {
                             new Comments
@@ -681,7 +681,7 @@ namespace DFTests
         public async void GetCommentExceptionShouldReturnNotFound()
         {
             var mockBL = new Mock<IComment>();
-            mockBL.Setup(x => x.GetComment(It.IsAny<int>())).Throws(new Exception("exception test"));
+            mockBL.Setup(x => x.GetCommentByID(It.IsAny<int>())).Throws(new Exception("exception test"));
 
 
 
@@ -734,7 +734,7 @@ namespace DFTests
         public async void DeleteCommentExceptionShouldReturnBadRequest()
         {
             var mockBL = new Mock<IComment>();
-            mockBL.Setup(x => x.RemoveComments(It.IsAny<int>())).Throws(new Exception("exception test"));
+            mockBL.Setup(x => x.RemoveComments(It.IsAny<Comments>())).Throws(new Exception("exception test"));
 
 
 
