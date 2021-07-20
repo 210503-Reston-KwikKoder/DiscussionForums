@@ -7,6 +7,7 @@ using DFBL;
 using DFDL;
 using DFModels;
 using Serilog;
+using Microsoft.AspNetCore.Authorization;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -54,22 +55,29 @@ namespace DiscussionForumREST.Controllers
 
         // PUT api/<DogController>
         [HttpPost]
+        [Authorize("read:messages")]
         public async Task<IActionResult> AddForum(Forum forum)
         {
+
             try
             {
                 await _BL.AddForum(forum);
+
                 return NoContent();
             }
             catch (Exception e)
             {
+                Console.WriteLine("----------------------------------------------------");
+                Console.WriteLine(forum);  
                 Log.Error("Failed to add Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
-                return BadRequest();
+                 return BadRequest();
+
             }
         }
 
         // POST api/<DogController>
         [HttpPut]
+         [Authorize("read:messages")]
         public async Task<IActionResult> UpdateForum([FromBody] Forum forum)
         {
             try
@@ -86,16 +94,17 @@ namespace DiscussionForumREST.Controllers
 
         // DELETE api/<DogController>/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteForum([FromBody] Forum forum)
+        [Authorize("read:messages")]
+        public async Task<IActionResult> DeleteForum(int id)
         {
             try
             {
-                await _BL.RemoveForum(forum);
+                await _BL.RemoveForum(id);
                 return NoContent();
             }
             catch (Exception e)
             {
-                Log.Error("Failed to remove Forums with ID: " + forum.ForumID + " in ForumController", e.Message);
+                Log.Error("Failed to remove Forums with ID: " + id + " in ForumController", e.Message);
                 return BadRequest(e.Message);
             }
         }

@@ -17,23 +17,26 @@ namespace DFBL
         }
         public async Task<List<Comments>> GetAllComments()
         {
-            return await _repo.GetAllCommentsAsync();
+           return  await _repo.GetAllCommentsAsync();
         }
 
-        public async Task<List<Comments>> GetComment(int commentID)
+        public async Task<List<Comments>> GetCommentsByPostID(int PostID)
         {
-            return await _repo.GetCommentsByIdAsync(commentID);
+            return await _repo.GetCommentsByIdAsync(PostID);
         }
-
+        public async Task<Comments> GetCommentByID(int CommentID)
+        {
+            return await _repo.GetCommentByCommentID(CommentID);
+        }
         public async Task<Comments> AddComment(Comments comment)
         {
             return await _repo.AddCommentsAsync(comment);
         }
 
-        public async Task<Comments> RemoveComments(Comments comments)
+        public async Task<int> RemoveComments(Comments comment)
         {
 
-            return await _repo.DeleteCommentsAsync(comments);
+            return await _repo.DeleteCommentsAsync(comment);
 
         }
 

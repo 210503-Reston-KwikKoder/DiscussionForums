@@ -25,11 +25,12 @@ namespace DFBL
         /// <param name="id">forumID</param>
         /// <returns></returns>
         Task<List<Posts>> GetPostForForumWithID(int id);
+        Task<Posts> GetPostByPostID(int id);
         /// <summary>
         /// Removes a Post from the Database for the given Post 
         /// </summary>
         /// <returns></returns>
-        Task<Posts> RemovePost(Posts post);
+        Task<int> RemovePost(Posts post);
         /// <summary>
         /// Updates the given Post Object in the Database
         /// </summary>

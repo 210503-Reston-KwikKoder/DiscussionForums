@@ -28,13 +28,13 @@ namespace DFDL
             Log.Debug("Adding Forums into the database: {0}", forum.ForumID);
             return forum;
         }
-        public async Task<Forum> DeleteForumAsync(Forum forum)
+        public async Task<int> DeleteForumAsync(int forumID)
         {
-            Forum toBeDeleted = _context.Forums.AsNoTracking().First(foru => foru.ForumID == forum.ForumID);
+            Forum toBeDeleted = _context.Forums.AsNoTracking().First(foru => foru.ForumID == forumID);
             _context.Forums.Remove(toBeDeleted);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Forums from the database: {0}", forum.ForumID);
-            return forum;
+            Log.Debug("Removing Forums from the database: {0}", forumID);
+            return forumID;
         }
         public async Task<Forum> UpdateForumAsync(Forum forum)
         {
@@ -83,21 +83,20 @@ namespace DFDL
             }
             catch (Exception e)
             {
+                Console.WriteLine(e.Message);
                 Log.Error("Failed to Add Post: " + posts + "\n" + e.Message);
                 return null;
             }
         }
-        public async Task<Posts> DeletePostsAsync(Posts posts)
+        public async Task<int> DeletePostsAsync(Posts post)
         {
-            Posts toBeDeleted = _context.Posts.AsNoTracking().First(post => post.PostID == posts.PostID);
-            _context.Posts.Remove(toBeDeleted);
+            _context.Posts.Remove(post);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Posts from the database: {0}", posts.PostID);
-            return posts;
+            Log.Debug("Removing Posts from the database: {0}", post.PostID);
+            return post.PostID;
         }
         public async Task<Posts> UpdatePostsAsync(Posts posts)
         {
-            _context.Posts.Update(posts);
             await _context.SaveChangesAsync();
             Log.Debug("Updating Posts from the database: {0}", posts.PostID);
             return posts;
@@ -140,7 +139,7 @@ namespace DFDL
                 return null;
             }
             Log.Debug("Getting Posts from the database: {0}", posts.PostID);
-            return new Posts(found.PostID, found.Topic, found.UserCreator, found.ForumID);
+            return new Posts(found.PostID, found.Topic, found.UserName, found.ForumID);
         }
 
         //Done with Posts & starting with Comments
@@ -154,13 +153,12 @@ namespace DFDL
             Log.Debug("Adding Comment into the database: {0}", comments.PostID);
             return comments;
         }
-        public async Task<Comments> DeleteCommentsAsync(Comments comments)
+        public async Task<int> DeleteCommentsAsync(Comments comment)
         {
-            Comments toBeDeleted = _context.Comments.AsNoTracking().First(comm => comm.CommentID == comments.CommentID);
-            _context.Comments.Remove(toBeDeleted);
+            _context.Remove(comment);
             await _context.SaveChangesAsync();
-            Log.Debug("Removing Comment from the database: {0}", comments.CommentID);
-            return comments;
+            Log.Debug("Removing Comment from the database: {0}", comment.CommentID);
+            return comment.CommentID;
         }
         public async Task<Comments> UpdateCommentsAsync(Comments comments)
         {
@@ -171,10 +169,16 @@ namespace DFDL
         }
         public async Task<List<Comments>> GetCommentsByIdAsync(int id)
         {
-            Log.Debug("Getting Comment from the database by ID: {0}", id);
+            Log.Debug("Getting Comment from the database by Post ID: {0}", id);
             return await _context.Comments.Select(comm => comm)
                 .Where(comm => comm.PostID == id)
                 .ToListAsync();
+        }
+        public async Task<Comments> GetCommentByCommentID(int commentID)
+        {
+            Log.Debug("Getting Comment from the database by ID: {0}", commentID);
+            return await _context.Comments.FirstAsync(comm => comm.CommentID == commentID);
+                
         }
         public async Task<List<Comments>> GetAllCommentsAsync()
         {
@@ -191,6 +195,11 @@ namespace DFDL
             if (found == null) return null;
             Log.Debug("Getting Comment from the database: {0}", comments.PostID);
             return new Comments(found.CommentID, found.PostID, found.UserName, found.Created, found.Message);
+        }
+
+        public async Task<Posts> GetPostByPostID(int id)
+        {
+            return await _context.Posts.FindAsync(id);
         }
     }
 }

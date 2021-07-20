@@ -3,14 +3,18 @@ using Xunit;
 using DFDL;
 using DFBL;
 using DFModels;
+using DTO = DiscussionForumREST.DTO;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using Rest = DiscussionForumREST;
-
+using Microsoft.Extensions.Options;
+using Moq;
+using DiscussionForumREST;
+using System.Security.Claims;
+using DiscussionForumREST.DTO;
 
 namespace DFTests
 {
@@ -24,438 +28,7 @@ namespace DFTests
             options = new DbContextOptionsBuilder<DFDBContext>().UseSqlite("Filename=Test.db").Options;
             Seed();
         }
-        [Fact]
-        public void GetForumsShouldGetAllForums()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-    
-                var ForCont = new Rest.Controllers.ForumController(_BL);
 
-                //Act
-                var returnedValue = ForCont.GetForums();
-                var returnedStatus = returnedValue.Result as OkObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Forum>>(returnedStatus.Value);
-            }
-        }
-
-        [Fact]
-        public void GetForumShouldReturnAForum()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-
-                int forumID = 631;
-
-                var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                //Act
-                var returnedValue = ForCont.GetForum(forumID);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<Forum>(returnedStatus.Value);
-            }
-
-        }
-
-        [Fact]
-        public void AddForumsShouldReturnCreated()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-
-                var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                Forum test = new Forum()
-                {
-                    ForumID = 2,
-                    Description = "Testing",
-                    Topic = "test"
-                };
-
-                //Act
-                var returnedValue = ForCont.AddForum(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-
-        [Fact]
-        public void AddForumsShouldReturnBadRequestIfExists()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-
-                var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                Forum test = new Forum
-                {
-                    ForumID = 631,
-                    Topic = "Found dogs",
-                    Description = "Used for people to post about finding dogs"
-                };
-
-                //Act
-                var returnedValue = ForCont.AddForum(test);
-                var returnedStatus = returnedValue.Result as BadRequestResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status400BadRequest);
-            }
-        }
-
-        [Fact]
-        public void UpdateForumShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-
-                var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                Forum test = new Forum()
-                {
-                    ForumID = 631,
-                    Description = "Testing",
-                    Topic = "test"
-                };
-
-                //Act
-                var returnedValue = ForCont.UpdateForum(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-
-        [Fact]
-        public void RemoveForumsShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForum _BL = new ForumBL(_repo);
-
-                var ForCont = new Rest.Controllers.ForumController(_BL);
-
-                Forum test = new Forum()
-                {
-                    ForumID = 631,
-                    Topic = "Found dogs",
-                    Description = "Used for people to post about finding dogs"
-                };
-
-                //Act
-                var returnedValue = ForCont.DeleteForum(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-
-        [Fact]
-        public void AddPostShouldCreateAPostAndReturnCreated()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-
-                var PostCont = new Rest.Controllers.ForumPostController(_BL);
-
-                Posts test = new Posts()
-                {
-                    PostID = 1,
-                    ForumID = 631,
-                    Topic = "test",
-                    UserCreator = "Cesar_19"
-                };
-
-                //Act
-                var returnedValue = PostCont.AddPost(test);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status201Created);
-                Assert.Equal(returnedStatus.Value, test);
-            }
-        }
-
-        [Fact]
-        public void GetAllPostsShouldReturnAListOfResults()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-
-                var ForCont = new Rest.Controllers.ForumPostController(_BL);
-
-                //Act
-                var returnedValue = ForCont.GetPosts();
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Posts>>(returnedStatus.Value);
-            }
-        }
-
-        [Fact]
-        public void GetPostsShouldReturnAForumOfResults()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-
-                int ForumID = 631;
-
-                var ForCont = new Rest.Controllers.ForumPostController(_BL);
-
-                //Act
-                var returnedValue = ForCont.GetPost(ForumID);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Posts>>(returnedStatus.Value);
-            }
-        }
-
-        [Fact]
-        public void DeletePostsShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-
-                var PostCont = new Rest.Controllers.ForumPostController(_BL);
-
-                Posts test = new Posts()
-                {
-                    PostID = 7771,
-                    Topic = "Lost Dogs",
-                    UserCreator = "Cesar_19",
-                    ForumID = 631
-                };
-
-                //Act
-                var returnedValue = PostCont.DeletePost(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-        [Fact]
-        public void UpdatePostsShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IForumPost _BL = new ForumPostBL(_repo);
-
-                var PostCont = new Rest.Controllers.ForumPostController(_BL);
-
-                Posts test = new Posts()
-                {
-                    PostID = 1648,
-                    Topic = "Found Dog",
-                    UserCreator = "Cesar_19",
-                    ForumID = 631
-                };
-
-                //Act
-                var returnedValue = PostCont.UpdatePost(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-        [Fact]
-        public void AddCommentsShouldCreateAPostAndReturnCreated()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                var CommCont = new Rest.Controllers.CommentController(_BL);
-
-                Comments test = new Comments()
-                {
-                    CommentID = 0,
-                    Created = DateTime.Now,
-                    Message = "Testing message",
-                    UserName = "Cesar_19",
-                    PostID = 1648
-                };
-
-                //Act
-                var returnedValue = CommCont.AddComment(test);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status201Created);
-                Assert.Equal(returnedStatus.Value, test);
-            }
-        }
-
-        [Fact]
-        public void AddCommentsShouldReturnBadRequestIfExists()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                var CommCont = new Rest.Controllers.CommentController(_BL);
-
-                Comments test = new Comments
-                {
-                    CommentID = 753,
-                    PostID = 123,
-                    UserName = "Cesar_19",
-                    Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
-                    Message = "I just got a new dog!"
-                };
-
-                //Act
-                var returnedValue = CommCont.AddComment(test);
-                var returnedStatus = returnedValue.Result as BadRequestResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status400BadRequest);
-
-            }
-        }
-
-        [Fact]
-        public void GetAllCommentsShouldReturnAListOfResults()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                var ForCont = new Rest.Controllers.CommentController(_BL);
-
-                //Act
-                var returnedValue = ForCont.GetAllComments();
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Comments>>(returnedStatus.Value);
-            }
-        }
-
-        [Fact]
-        public void GetCommentShouldReturnACommentOfResults()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                int CommentID = 753;
-
-                var CommCont = new Rest.Controllers.CommentController(_BL);
-
-                //Act
-                var returnedValue = CommCont.GetComment(CommentID);
-                var returnedStatus = returnedValue.Result as ObjectResult;
-
-                //Assert
-                Assert.NotNull(returnedValue.Result);
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status200OK);
-                Assert.IsType<List<Comments>>(returnedStatus.Value);
-            }
-        }
-
-        [Fact]
-        public void DeleteCommentsShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                var CommentCont = new Rest.Controllers.CommentController(_BL);
-
-                Comments test = new Comments
-                {
-                    CommentID = 753,
-                    PostID = 123,
-                    UserName = "Cesar_19",
-                    Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
-                    Message = "I just got a new dog!"
-                };
-
-                //Act
-                var returnedValue = CommentCont.DeleteComment(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
-        [Fact]
-        public void UpdateCommentsShouldReturnNoContent()
-        {
-            using (var context = new DFDBContext(options))
-            {
-                IRepo _repo = new Repo(context);
-                IComment _BL = new CommentBL(_repo);
-
-                var PostCont = new Rest.Controllers.CommentController(_BL);
-
-                Comments test = new Comments
-                {
-                    CommentID = 753,
-                    PostID = 123,
-                    UserName = "Cesar_19",
-                    Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
-                    Message = "New Test Message!"
-                };
-
-                //Act
-                var returnedValue = PostCont.UpdateComment(test);
-                var returnedStatus = returnedValue.Result as NoContentResult;
-
-                //Assert
-                Assert.Equal(returnedStatus.StatusCode, StatusCodes.Status204NoContent);
-            }
-        }
         [Fact]
         public void GetAllComments()
         {
@@ -633,6 +206,287 @@ namespace DFTests
                 Assert.NotEqual(ForumID, result.ForumID);
             }
         }
+
+        [Fact]
+        public async void GetForumAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Forum toFind = await _repo.AddForumAsync(new Forum(12, "test 1", "test"));
+
+                Forum found = await _repo.GetForumAsync(toFind);
+
+                Assert.Equal(toFind.ForumID, found.ForumID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void  GetPostsByIdAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+
+                Posts found = await _repo.GetPostsByIdAsync(1);
+
+                Assert.Equal(toFind.PostID, found.PostID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void GetPostsAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+
+                Posts found = await _repo.GetPostsAsync(toFind);
+
+                Assert.Equal(toFind.PostID, found.PostID);
+                Assert.Equal(toFind.Topic, found.Topic);
+            }
+        }
+
+        [Fact]
+        public async void GetCommentsAsyncShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Comments toFind = await _repo.AddCommentsAsync(new Comments(1, 1, "test", DateTime.Now, "test"));
+
+                Comments found = await _repo.GetCommentsAsync(toFind);
+
+                Assert.Equal(toFind.CommentID, found.CommentID);
+                Assert.Equal(toFind.PostID, found.PostID);
+                
+            }
+        }
+
+        [Fact]
+        public async void GetForumShouldReturnNullIfFourmDosentExist()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+
+                Forum forum = await _repo.GetForumAsync(new Forum { ForumID = 55, Description = "TEST DESCRIPTION", Topic = "NOT EXISTING TOPIC" });
+
+                Assert.Null(forum);
+
+            }
+        }
+
+        [Fact]
+        public async void DeletePostShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts post = new Posts { PostID = 8844, Description = "" };
+                Posts added = await _repo.AddPostsAsync(post);
+
+                int id = await _repo.DeletePostsAsync(added);
+
+                Assert.Equal(id, added.PostID);
+
+            }
+        }
+
+        [Fact]
+        public async void GetPostsShouldReturnNullIfPostDosentExist()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                Posts post = new Posts { PostID = 3211, Description = "" };
+                Posts Found = await _repo.GetPostsAsync(post);
+
+                Assert.Null(Found);
+
+            }
+        }
+
+        [Fact]
+        public async void DeleteCommentsShouldWork()
+        {
+            using (var context = new DFDBContext(options))
+            {
+                IRepo _repo = new Repo(context);
+                int expected = 753;
+
+                int id = await _repo.DeleteCommentsAsync(new Comments()
+                {
+                    CommentID = expected
+                });
+
+                Assert.Equal(id, expected);
+
+            }
+        }
+
+
+
+        [Fact]
+        public void CheckScopeAuthShouldWork()
+        {
+            HasScopeRequirement scope = new HasScopeRequirement("testScope", "testIssuer");
+            string expectedScope = "testScope";
+            string expectedIssue = "testIssuer";
+            Assert.Equal(scope.Scope, expectedScope);
+            Assert.Equal(scope.Issuer, expectedIssue);
+
+        }
+
+        [Fact]
+        public void ApiSettingsShouldWork()
+        {
+            ApiSettings apiSetting = new ApiSettings();
+            string gitHub = "test github";
+            string auth = "test auth";
+
+            apiSetting.githubApiKey = "test github";
+            apiSetting.authString = "test auth";
+
+            Assert.Equal(apiSetting.githubApiKey, gitHub);
+            Assert.Equal(apiSetting.authString, auth);
+
+        }
+
+        [Fact]
+        public void ForumPostOutputShouldWork()
+        {
+            ForumPostOutput forumPost = new ForumPostOutput();
+
+            string UserName = "test userName";
+            string Topic = "test Topic";
+            int PostID = 12;
+            bool isUser = true;
+            string ImgURL = "test of img";
+            int ForumID = 2;
+            string Description = "test description";
+            DateTime DateCreated = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+
+            forumPost.UserName = "test userName";
+            forumPost.Topic = "test Topic";
+            forumPost.PostID = 12;
+            forumPost.isUser = true;
+            forumPost.ImgURL = "test of img";
+            forumPost.ForumID = 2;
+            forumPost.Description = "test description";
+            forumPost.DateCreated = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+
+            Assert.Equal(forumPost.UserName, UserName);
+            Assert.Equal(forumPost.Topic, Topic);
+            Assert.Equal(forumPost.PostID, PostID);
+            Assert.Equal(forumPost.isUser, isUser);
+            Assert.Equal(forumPost.ImgURL, ImgURL);
+            Assert.Equal(forumPost.ForumID, ForumID);
+            Assert.Equal(forumPost.Description, Description);
+            Assert.Equal(forumPost.DateCreated, DateCreated);
+        }
+
+        [Fact]
+        public void ForumPostInputShouldWork()
+        {
+            ForumPostInput forumPost = new ForumPostInput();
+
+            string Topic = "test Topic";
+            int PostID = 12;
+            int ForumID = 2;
+            string Description = "test description";
+
+            forumPost.Topic = "test Topic";
+            forumPost.PostID = 12;
+            forumPost.ForumID = 2;
+            forumPost.Description = "test description";
+
+            Assert.Equal(forumPost.Topic, Topic);
+            Assert.Equal(forumPost.PostID, PostID);
+            Assert.Equal(forumPost.ForumID, ForumID);
+            Assert.Equal(forumPost.Description, Description);
+        }
+
+        [Fact]
+        public void CommentOutputShouldWork()
+        {
+            CommentOutput comment = new CommentOutput();
+
+            string AuthID = "test Auth";
+            int CommentID = 33;
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            bool isLoggedUser = true;
+            string Message = "test message";
+            string UserName = "test user name";
+
+
+            comment.AuthID = "test Auth";
+            comment.CommentID = 33;
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.isLoggedUser = true;
+            comment.Message = "test message";
+            comment.UserName = "test user name";
+
+
+            Assert.Equal(comment.AuthID, AuthID);
+            Assert.Equal(comment.CommentID, CommentID);
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.isLoggedUser, isLoggedUser);
+            Assert.Equal(comment.Message, Message);
+            Assert.Equal(comment.UserName, UserName);
+        }
+
+        [Fact]
+        public void UpdateCommentInputShouldWork()
+        {
+            UpdateCommentInput comment = new UpdateCommentInput();
+
+            int CommentID = 33;
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            string Message = "test message";
+
+
+            
+            comment.CommentID = 33;
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.Message = "test message";
+
+
+
+            Assert.Equal(comment.CommentID, CommentID);
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.Message, Message);
+        }
+
+        [Fact]
+        public void AddCommentinputShouldWork()
+        {
+            AddCommnetInput comment = new AddCommnetInput();
+
+            int PostID = 12;
+            DateTime Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            string Message = "test message";
+  
+            comment.PostID = 12;
+            comment.Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc);
+            comment.Message = "test message";
+
+            Assert.Equal(comment.PostID, PostID);
+            Assert.Equal(comment.Created, Created);
+            Assert.Equal(comment.Message, Message);
+        }
+
         private void Seed()
         {
             using (var context = new DFDBContext(options))
@@ -675,14 +529,14 @@ namespace DFTests
                         {
                             PostID = 7771,
                             Topic = "Lost Dogs",
-                            UserCreator = "Cesar_19",
+                            UserName = "Cesar_19",
                             ForumID = 631
                         },
                         new Posts
                         {
                             PostID = 1648,
                             Topic = "Found Dogs",
-                            UserCreator = "Cesar_19",
+                            UserName = "Cesar_19",
                             ForumID = 631
                         }
 

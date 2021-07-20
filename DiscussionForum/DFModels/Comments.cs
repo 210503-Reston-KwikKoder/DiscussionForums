@@ -20,6 +20,8 @@ namespace DFModels
         { }
         public int CommentID { get; set; }
         public int PostID { get; set; }
+        public string AuthID { get; set; }
+        public Posts post { get; set; }
         public string UserName { get; set; }
         public DateTime Created { get; set; }
         public string Message { get; set; }

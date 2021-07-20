@@ -26,12 +26,17 @@ namespace DFBL
             return await _repo.GetPostForForumWithID(id);
         }
 
+        public async Task<Posts> GetPostByPostID(int id)
+        {
+            return await _repo.GetPostByPostID(id);
+        }
+
         public async Task<Posts> AddPost(Posts post)
         {
             return await _repo.AddPostsAsync(post);
         }
 
-        public async Task<Posts> RemovePost(Posts post)
+        public async Task<int> RemovePost(Posts post)
         {
 
             return await _repo.DeletePostsAsync(post);
