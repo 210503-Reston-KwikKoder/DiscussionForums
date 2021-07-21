@@ -66,7 +66,7 @@ namespace DFTests
         public void ValidAddComment()
         {
             int CommentID = 9642;
-            int PostID = 5631;
+            int PostID = 7771;
             string UserName = "Miggy_Cubbies";
             DateTime Created = new DateTime(2017, 8, 4, 8, 16, 21, DateTimeKind.Utc);
             string Message = "I just lost my dog!";
@@ -116,7 +116,7 @@ namespace DFTests
             int PostID = 7623;
             string Topic = "Found Dogs";
             string UserCreator = "Pepe_Rios";
-            int ForumID = 3486;
+            int ForumID = 631;
 
             using (var context = new DFDBContext(options))
             {
@@ -228,7 +228,7 @@ namespace DFTests
             using (var context = new DFDBContext(options))
             {
                 IRepo _repo = new Repo(context);
-                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 631));
 
                 Posts found = await _repo.GetPostsByIdAsync(1);
 
@@ -243,7 +243,7 @@ namespace DFTests
             using (var context = new DFDBContext(options))
             {
                 IRepo _repo = new Repo(context);
-                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 1));
+                Posts toFind = await _repo.AddPostsAsync(new Posts(1, "test", "new user", 631));
 
                 Posts found = await _repo.GetPostsAsync(toFind);
 
@@ -258,9 +258,9 @@ namespace DFTests
             using (var context = new DFDBContext(options))
             {
                 IRepo _repo = new Repo(context);
-                Comments toFind = await _repo.AddCommentsAsync(new Comments(1, 1, "test", DateTime.Now, "test"));
+                Comments toFind = await _repo.AddCommentsAsync(new Comments(1, 7771, "test", DateTime.Now, "test"));
 
-                Comments found = await _repo.GetCommentsAsync(toFind);
+                Comments found = await context.Comments.FirstAsync(x => x.CommentID == 1);
 
                 Assert.Equal(toFind.CommentID, found.CommentID);
                 Assert.Equal(toFind.PostID, found.PostID);
@@ -288,7 +288,7 @@ namespace DFTests
             using (var context = new DFDBContext(options))
             {
                 IRepo _repo = new Repo(context);
-                Posts post = new Posts { PostID = 8844, Description = "" };
+                Posts post = new Posts { PostID = 8844, Description = "", ForumID = 631};
                 Posts added = await _repo.AddPostsAsync(post);
 
                 int id = await _repo.DeletePostsAsync(added);
@@ -304,7 +304,7 @@ namespace DFTests
             using (var context = new DFDBContext(options))
             {
                 IRepo _repo = new Repo(context);
-                Posts post = new Posts { PostID = 3211, Description = "" };
+                Posts post = new Posts { PostID = 771, Description = "", ForumID = 631 };
                 Posts Found = await _repo.GetPostsAsync(post);
 
                 Assert.Null(Found);
@@ -498,7 +498,7 @@ namespace DFTests
                         new Comments
                         {
                             CommentID = 753,
-                            PostID = 123,
+                            PostID = 7771,
                             UserName = "Cesar_19",
                             Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                             Message = "I just got a new dog!"
@@ -506,7 +506,7 @@ namespace DFTests
                         new Comments
                         {
                             CommentID = 867,
-                            PostID = 5309,
+                            PostID = 1648,
                             UserName = "Pepe_Rios",
                             Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc),
                             Message = "I just lost my dog!"

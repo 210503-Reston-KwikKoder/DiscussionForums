@@ -103,7 +103,7 @@ namespace DiscussionForumREST.Controllers
             catch (Exception e)
             {
                 Log.Error("Failed to Get post with ID: " + id + " in PostController", e.Message);
-                return BadRequest(e.Message);
+                return BadRequest();
             }
         }
 

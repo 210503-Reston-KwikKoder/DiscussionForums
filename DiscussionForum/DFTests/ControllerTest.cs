@@ -395,7 +395,7 @@ namespace DFTests
         }
 
         [Fact]
-        public async void GetPostsExceptionShouldReturnNotFound()
+        public async void GetPostsExceptionShouldReturnBadRequest()
         {
             var mockBL = new Mock<IForumPost>();
             mockBL.Setup(x => x.GetPostForForumWithID(It.IsAny<int>())).Throws(new Exception("exception test"));
@@ -404,8 +404,8 @@ namespace DFTests
 
 
             var controller = new Rest.Controllers.ForumPostController(mockBL.Object, mockUserSettings.Object);
-            var result = await controller.GetPost(1);
-            Assert.IsType<NotFoundResult>(result);
+            var result = await controller.GetPost(71);
+            Assert.IsType<BadRequestResult>(result);
         }
 
         [Fact]
@@ -434,7 +434,7 @@ namespace DFTests
                     PostID = 2020,
                     Topic = "Test",
                     UserName = "test",
-                    ForumID = 2
+                    ForumID = 631
                 };
 
                 Posts added = await _BL.AddPost(test);
@@ -534,14 +534,14 @@ namespace DFTests
 
                 Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
-                    PostID = 123,
+                    PostID = 1648,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
 
                 //Act
                 var returnedValue = CommCont.AddComment(test);
-                var returnedStatus = returnedValue.Result as ObjectResult;
+                var returnedStatus = returnedValue.Result as CreatedResult;
 
                 //Assert
                 Assert.NotNull(returnedValue.Result);
@@ -564,7 +564,7 @@ namespace DFTests
 
                 Rest.DTO.AddCommnetInput test = new Rest.DTO.AddCommnetInput
                 {
-                    PostID = 123,
+                    PostID = 1648,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
@@ -630,13 +630,13 @@ namespace DFTests
             {
 
                 var _BL = new Mock<IComment>();
-                _BL.Setup(x => x.GetComment(It.IsAny<int>())).ReturnsAsync(
+                _BL.Setup(x => x.GetCommentsByPostID(It.IsAny<int>())).ReturnsAsync(
                         new List<Comments>
                         {
                             new Comments
                             {
                                 CommentID = 753,
-                                PostID = 123,
+                                PostID = 7771,
                                 UserName = "Cesar_19",
                                 Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                                 Message = "I just got a new dog!"
@@ -644,7 +644,7 @@ namespace DFTests
                             new Comments
                             {
                                 CommentID = 867,
-                                PostID = 5309,
+                                PostID = 1648,
                                 UserName = "Pepe_Rios",
                                 Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc),
                                 Message = "I just lost my dog!"
@@ -681,7 +681,7 @@ namespace DFTests
         public async void GetCommentExceptionShouldReturnNotFound()
         {
             var mockBL = new Mock<IComment>();
-            mockBL.Setup(x => x.GetComment(It.IsAny<int>())).Throws(new Exception("exception test"));
+            mockBL.Setup(x => x.GetCommentsByPostID(It.IsAny<int>())).Throws(new Exception("exception test"));
 
 
 
@@ -734,7 +734,7 @@ namespace DFTests
         public async void DeleteCommentExceptionShouldReturnBadRequest()
         {
             var mockBL = new Mock<IComment>();
-            mockBL.Setup(x => x.RemoveComments(It.IsAny<int>())).Throws(new Exception("exception test"));
+            mockBL.Setup(x => x.RemoveComments(new Comments())).Throws(new Exception("exception test"));
 
 
 
@@ -767,7 +767,7 @@ namespace DFTests
 
                 Rest.DTO.UpdateCommentInput test = new Rest.DTO.UpdateCommentInput
                 {
-                    PostID = 123,
+                    PostID = 7771,
                     Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                     Message = "I just got a new dog!"
                 };
@@ -807,7 +807,7 @@ namespace DFTests
                         new Comments
                         {
                             CommentID = 753,
-                            PostID = 123,
+                            PostID = 1648,
                             UserName = "Cesar_19",
                             Created = new DateTime(2015, 12, 31, 5, 10, 20, DateTimeKind.Utc),
                             Message = "I just got a new dog!"
@@ -815,7 +815,7 @@ namespace DFTests
                         new Comments
                         {
                             CommentID = 867,
-                            PostID = 5309,
+                            PostID = 7771,
                             UserName = "Pepe_Rios",
                             Created = new DateTime(2019, 1, 3, 5, 1, 2, DateTimeKind.Utc),
                             Message = "I just lost my dog!"

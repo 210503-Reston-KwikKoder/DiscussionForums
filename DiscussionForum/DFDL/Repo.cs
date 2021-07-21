@@ -146,11 +146,19 @@ namespace DFDL
 
         public async Task<Comments> AddCommentsAsync(Comments comments)
         {
-            await _context.Comments.AddAsync(
-                comments
-                );
-            await _context.SaveChangesAsync();
-            Log.Debug("Adding Comment into the database: {0}", comments.PostID);
+            try
+            {
+                await _context.Comments.AddAsync(
+                    comments
+                    );
+                await _context.SaveChangesAsync();
+                Log.Debug("Adding Comment into the database: {0}", comments.PostID);
+            } 
+            catch (Exception e)
+            {
+                Log.Error("Failed to add Comment with ID: " + comments.CommentID);
+                return null;
+            }
             return comments;
         }
         public async Task<int> DeleteCommentsAsync(Comments comment)
